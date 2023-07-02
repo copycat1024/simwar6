@@ -1,7 +1,3 @@
-#![feature(coerce_unsized)]
-#![feature(unsize)]
-#![feature(const_mut_refs)]
-
 mod app;
 mod launcher;
 mod simwar;
