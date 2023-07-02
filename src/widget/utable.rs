@@ -1,5 +1,5 @@
 use soyo::{
-    tui::{Color, Letter, Quad},
+    gfx::{Color, Letter, Quad},
     view::Render,
 };
 use std::char::{from_digit, from_u32};

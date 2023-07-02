@@ -1,4 +1,4 @@
-use crate::tui::Quad;
+use crate::gfx::Quad;
 
 pub struct Buffer<T: Clone> {
     rect: Quad,

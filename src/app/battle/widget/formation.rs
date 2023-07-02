@@ -1,7 +1,7 @@
 use crate::util::math::Scale;
 use rand_xoshiro::Xoshiro256PlusPlus;
 use soyo::{
-    tui::{Letter, Quad},
+    gfx::{Letter, Quad},
     view::{Frame, Render},
 };
 

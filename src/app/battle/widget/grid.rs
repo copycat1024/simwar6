@@ -1,6 +1,6 @@
 use crate::usym::hbox;
 use soyo::{
-    tui::{Letter, Quad},
+    gfx::{Letter, Quad},
     view::{Frame, Render, Renderer},
 };
 

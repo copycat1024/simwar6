@@ -4,7 +4,7 @@ mod render;
 pub use self::raito::Raito;
 
 use crate::{
-    tui::{Color, Event},
+    gfx::{Color, Event},
     util::Result,
 };
 use std::time::Duration;

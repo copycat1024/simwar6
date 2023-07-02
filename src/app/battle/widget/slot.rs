@@ -2,7 +2,7 @@ use super::{formation, Formation, PercentBar};
 use crate::util::Timer;
 use somme::Attr;
 use soyo::{
-    tui::Color,
+    gfx::Color,
     util::HAlign,
     view::{Compose, Frame, NodeList, Renderer},
     widget::Label,

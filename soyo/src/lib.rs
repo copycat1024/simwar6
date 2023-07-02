@@ -4,8 +4,8 @@
 #![feature(let_chains)]
 #![warn(clippy::all)]
 
+pub mod gfx;
 pub mod mvc;
-pub mod tui;
 pub mod util;
 pub mod view;
 pub mod widget;

@@ -1,5 +1,5 @@
 use crate::{
-    tui::{Letter, Quad},
+    gfx::{Letter, Quad},
     view::Frame,
 };
 

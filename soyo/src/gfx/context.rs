@@ -1,5 +1,5 @@
 use crate::{
-    tui::{backend::Backend, Color, Event, FrameBuffer, Letter, Quad},
+    gfx::{backend::Backend, Color, Event, FrameBuffer, Letter, Quad},
     util::Result,
 };
 use std::time::Duration;

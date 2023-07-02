@@ -1,6 +1,6 @@
 use super::Compose;
 use crate::{
-    tui::Context,
+    gfx::Context,
     view::{Attribute, Frame, Host, NodeList},
 };
 

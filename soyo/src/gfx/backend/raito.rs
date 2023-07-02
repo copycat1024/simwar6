@@ -1,6 +1,6 @@
 use super::render::Text;
 use crate::{
-    tui::{Backend, Color, Event, Key},
+    gfx::{Backend, Color, Event, Key},
     util::Result,
 };
 use raito::{

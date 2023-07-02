@@ -3,7 +3,7 @@ use crate::{launcher::Args, simwar::Tester};
 use somme::{self, Action, Game, Loadout};
 use soyo::{
     mvc::{self, Flow},
-    tui::{self, Key},
+    gfx::{self, Key},
 };
 
 pub struct Model {
@@ -42,9 +42,9 @@ impl mvc::Model<Args> for Model {
         (Model::new(arg), View::default())
     }
 
-    fn dispatch(&self, event: tui::Event, _view: &Self::View) -> Option<Self::Event> {
+    fn dispatch(&self, event: gfx::Event, _view: &Self::View) -> Option<Self::Event> {
         match event {
-            tui::Event::Key { key } => {
+            gfx::Event::Key { key } => {
                 if key == Key::ESC {
                     Some(Event::Exit)
                 } else if key == Key(' ') {
@@ -53,7 +53,7 @@ impl mvc::Model<Args> for Model {
                     None
                 }
             }
-            tui::Event::Update { .. } => None,
+            gfx::Event::Update { .. } => None,
             _ => None,
         }
     }

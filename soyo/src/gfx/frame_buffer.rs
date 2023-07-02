@@ -1,5 +1,5 @@
 use crate::{
-    tui::{Backend, Buffer, Color, Event, Letter, Quad, Slot},
+    gfx::{Backend, Buffer, Color, Event, Letter, Quad, Slot},
     util::Result,
 };
 

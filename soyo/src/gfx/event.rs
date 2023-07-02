@@ -1,4 +1,4 @@
-use crate::tui::Key;
+use crate::gfx::Key;
 use std::{
     fmt::{Debug, Error, Formatter},
     time::Duration,

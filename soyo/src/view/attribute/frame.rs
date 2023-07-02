@@ -1,4 +1,4 @@
-use crate::tui::Quad;
+use crate::gfx::Quad;
 
 #[derive(Clone, Copy, Default)]
 pub struct Frame {

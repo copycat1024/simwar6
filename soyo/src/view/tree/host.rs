@@ -1,4 +1,4 @@
-use crate::{tui::Context, view::Frame};
+use crate::{gfx::Context, view::Frame};
 
 pub trait Host {
     fn render(&self, ctx: &mut Context);

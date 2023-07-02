@@ -1,6 +1,6 @@
 use super::Flow;
 use crate::{
-    tui::Context,
+    gfx::Context,
     util::Result,
     view::{Compose, Composer, Frame, Node},
 };

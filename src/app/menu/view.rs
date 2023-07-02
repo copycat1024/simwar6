@@ -1,6 +1,6 @@
 use crate::widget::Menu;
 use soyo::{
-    tui::Color,
+    gfx::Color,
     view::{Compose, Frame, NodeList, Renderer},
     widget::Label,
 };

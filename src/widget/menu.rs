@@ -1,5 +1,5 @@
 use soyo::{
-    tui::{Color, Letter, Quad},
+    gfx::{Color, Letter, Quad},
     util::FlexVec,
     view::Render,
 };

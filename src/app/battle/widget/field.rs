@@ -2,7 +2,7 @@ use super::{formation, Grid, Slot};
 use crate::app::battle::Trigger;
 use somme::{hecs::World, ActionKind, Attr, Unit};
 use soyo::{
-    tui::Color,
+    gfx::Color,
     view::{Compose, Composer, Frame, NodeList, Renderer},
 };
 

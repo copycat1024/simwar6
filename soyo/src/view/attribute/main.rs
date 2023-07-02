@@ -1,5 +1,5 @@
 use super::Frame;
-use crate::tui::Color;
+use crate::gfx::Color;
 
 #[derive(Clone, Copy)]
 pub struct Attribute {

@@ -1,5 +1,5 @@
 use crate::{
-    tui::{backend::Raito, Context},
+    gfx::{backend::Raito, Context},
     util::Result,
 };
 

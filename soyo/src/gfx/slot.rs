@@ -1,4 +1,4 @@
-use crate::tui::{Color, Letter};
+use crate::gfx::{Color, Letter};
 
 #[derive(Clone)]
 pub struct Slot {

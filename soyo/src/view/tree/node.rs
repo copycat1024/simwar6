@@ -1,6 +1,6 @@
 use super::Host;
 use crate::{
-    tui::Context,
+    gfx::Context,
     util::{SharedPtr, WeakPtr},
     view::{Compose, Composer, Frame, Render, Renderer},
 };

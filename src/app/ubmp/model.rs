@@ -1,7 +1,7 @@
 use super::{event::Event, view::View};
 use soyo::{
     mvc::{self, Flow},
-    tui::{self, Key},
+    gfx::{self, Key},
 };
 
 pub struct Model {
@@ -29,8 +29,8 @@ impl<T: 'static> mvc::Model<T> for Model {
         (Model::default(), View::default())
     }
 
-    fn dispatch(&self, event: tui::Event, _view: &Self::View) -> Option<Self::Event> {
-        if let tui::Event::Key { key } = event {
+    fn dispatch(&self, event: gfx::Event, _view: &Self::View) -> Option<Self::Event> {
+        if let gfx::Event::Key { key } = event {
             if key == Key::ESC {
                 Some(Event::Exit)
             } else if key == Key::LEFT {

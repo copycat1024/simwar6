@@ -1,6 +1,6 @@
 use super::{Dispatch, Flow, Model, View};
 use crate::{
-    tui::{Context, Event},
+    gfx::{Context, Event},
     util::Result,
 };
 

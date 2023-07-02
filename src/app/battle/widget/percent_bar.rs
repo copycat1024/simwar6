@@ -1,6 +1,6 @@
 use crate::util::math::Scale;
 use soyo::{
-    tui::{Letter, Quad},
+    gfx::{Letter, Quad},
     view::{Frame, Render},
 };
 
