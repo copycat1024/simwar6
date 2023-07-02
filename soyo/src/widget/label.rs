@@ -32,7 +32,7 @@ impl Label {
 
 impl Render for Label {
     fn render(&self, quad: Quad, letter: &mut Letter) {
-        *letter.c = self.text[quad.x - self.align(quad)];
+        letter.c = self.text[quad.x - self.align(quad)];
     }
 }
 

@@ -59,9 +59,16 @@ impl CellBlit {
 
         pass.set_2f("view_size", wv as f32, hv as f32);
         pass.set_2f("cell_size", wc as f32, hc as f32);
-        pass.set_3f("color", 0., 1., 0.);
         pass.bind_texture("tex", &mut self.texture);
 
         pass.draw(&mut self.vao, len);
+    }
+
+    pub fn fg(&mut self, r: f32, g: f32, b: f32) {
+        self.program.pass().set_3f("fg", r, g, b);
+    }
+
+    pub fn bg(&mut self, r: f32, g: f32, b: f32) {
+        self.program.pass().set_3f("bg", r, g, b);
     }
 }

@@ -36,35 +36,35 @@ impl Grid {
     fn render_intersect(&self, quad: Quad, letter: &mut Letter) {
         if quad.x == 0 {
             if quad.y == 0 {
-                *letter.c = hbox::CTL;
+                letter.c = hbox::CTL;
             } else if quad.y == quad.h - 1 {
-                *letter.c = hbox::CBL;
+                letter.c = hbox::CBL;
             } else {
-                *letter.c = hbox::IVL;
+                letter.c = hbox::IVL;
             }
         } else if quad.x == quad.w - 1 {
             if quad.y == 0 {
-                *letter.c = hbox::CTR;
+                letter.c = hbox::CTR;
             } else if quad.y == quad.h - 1 {
-                *letter.c = hbox::CBR;
+                letter.c = hbox::CBR;
             } else {
-                *letter.c = hbox::IVR;
+                letter.c = hbox::IVR;
             }
         } else if quad.y == 0 {
-            *letter.c = hbox::IHT;
+            letter.c = hbox::IHT;
         } else if quad.y == quad.h - 1 {
-            *letter.c = hbox::IHB;
+            letter.c = hbox::IHB;
         } else {
-            *letter.c = hbox::CRX;
+            letter.c = hbox::CRX;
         }
     }
 
     fn render_horizon_line(&self, letter: &mut Letter) {
-        *letter.c = hbox::LNH;
+        letter.c = hbox::LNH;
     }
 
     fn render_vertical_line(&self, letter: &mut Letter) {
-        *letter.c = hbox::LNV;
+        letter.c = hbox::LNV;
     }
 }
 

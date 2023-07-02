@@ -1,9 +1,8 @@
 use crate::{
     log::{enable_log, flush_log},
-    tui::{backend::Vt100, Context},
+    tui::{backend::Raito, Context},
     util::Result,
 };
-use std::io::stdout;
 
 pub type Instance<Args = ()> = fn(args: &mut Args, ctx: &mut Context) -> Result<usize>;
 
@@ -15,7 +14,7 @@ pub struct Launcher<Args: 'static> {
 
 impl<Args: 'static> Launcher<Args> {
     pub fn new(args: Args) -> Self {
-        let vt100 = Vt100::new(stdout());
+        let vt100 = Raito::new();
         Self {
             ctx: Context::new(vt100),
             code: 0,

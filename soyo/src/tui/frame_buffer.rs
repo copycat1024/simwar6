@@ -54,6 +54,7 @@ impl FrameBuffer {
             seq.step(&c.letter, x, y)?;
         }
         seq.flush()?;
+        seq.backend.flush()?;
 
         Ok(())
     }
@@ -91,10 +92,10 @@ impl<'a> Sequencer<'a> {
     }
 
     fn step(&mut self, letter: &Letter, x: i32, y: i32) -> Result {
-        if letter.hot() {
-            self.set_bg(*letter.bg)?;
-            self.set_fg(*letter.fg)?;
-            self.place(x, y, *letter.c)?;
+        if letter.c != '\0' {
+            self.set_bg(letter.bg)?;
+            self.set_fg(letter.fg)?;
+            self.place(x, y, letter.c)?;
         } else {
             self.flush()?;
         }
@@ -106,7 +107,6 @@ impl<'a> Sequencer<'a> {
         if !self.buf.is_empty() {
             self.backend.print(&self.buf)?;
             self.buf.clear();
-            self.backend.flush()?;
         }
 
         Ok(())

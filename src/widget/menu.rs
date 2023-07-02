@@ -44,9 +44,9 @@ impl Render for Menu {
     fn render(&self, quad: Quad, letter: &mut Letter) {
         let text = &self.list[quad.y];
 
-        *letter.c = text[quad.x - self.align(quad.y, quad)];
+        letter.c = text[quad.x - self.align(quad.y, quad)];
         if quad.y == self.item {
-            *letter.bg = Color::BLUE
+            letter.bg = Color::BLUE
         };
     }
 }

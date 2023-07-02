@@ -1,14 +1,14 @@
-use crate::{tui::Color, util::Hot};
+use crate::tui::Color;
 
 #[derive(Clone)]
 pub struct Letter {
-    pub fg: Hot<Color>,
-    pub bg: Hot<Color>,
-    pub c: Hot<char>,
+    pub fg: Color,
+    pub bg: Color,
+    pub c: char,
 }
 
 impl Letter {
     pub fn hot(&self) -> bool {
-        self.fg.hot() || self.bg.hot() || (self.c.hot() && *self.c != '\0')
+        self.c != '\0'
     }
 }

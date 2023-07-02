@@ -23,7 +23,7 @@ impl Utable {
     fn render_row_title(&self, quad: Quad, letter: &mut Letter) {
         let row = (quad.y - 1) as u32;
         let cell = self.cell as u32;
-        *letter.c = if quad.y > 0 {
+        letter.c = if quad.y > 0 {
             match quad.x {
                 0 => 'U',
                 1 => '+',
@@ -40,7 +40,7 @@ impl Utable {
 
     fn render_col_title(&self, quad: Quad, letter: &mut Letter) {
         let col = (quad.x - 6) as u32;
-        *letter.c = if col % 2 == 0 {
+        letter.c = if col % 2 == 0 {
             ' '
         } else {
             from_digit(col / 2, 16).unwrap_or('\0')
@@ -48,7 +48,7 @@ impl Utable {
     }
 
     fn render_item(&self, quad: Quad, letter: &mut Letter) {
-        *letter.c = if quad.x % 2 == 0 {
+        letter.c = if quad.x % 2 == 0 {
             ' '
         } else {
             let row = quad.y - 1;
@@ -56,7 +56,7 @@ impl Utable {
             let code = self.get_code(row as u32, col as u32);
 
             let (c, fg) = Self::map_basic(code);
-            *letter.fg = fg;
+            letter.fg = fg;
             c
         }
     }

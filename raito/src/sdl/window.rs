@@ -63,13 +63,7 @@ impl Window {
         if code == 0 {
             None
         } else {
-            match sdl_event.try_into() {
-                Ok(e) => Some(e),
-                Err(n) => {
-                    println!("Unknown event {n}");
-                    None
-                }
-            }
+            sdl_event.try_into().ok()
         }
     }
 

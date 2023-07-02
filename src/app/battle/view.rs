@@ -26,7 +26,7 @@ impl Compose for View {
 impl View {
     pub fn update(&mut self, game: &Game) {
         self.topbar.set(|w| write!(w, "Title"));
-        self.field.set(|w| w.update_units(game.view().units));
+        self.field.set(|w| w.update_units(game.view().ecs()));
     }
 
     pub fn trigger(&mut self, trigger: Trigger) {

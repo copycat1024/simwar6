@@ -24,8 +24,8 @@ impl Slot {
     }
 
     pub fn update(&mut self, attr: &Attr) {
-        let chp: i32 = attr.hp.into();
-        let mhp = attr.hp.max;
+        let chp: i32 = attr.get("hp").into();
+        let mhp = attr.get("max_hp");
 
         self.name.set(|w| write!(w, "{}", chp));
         self.health.set(|w| w.update(chp, mhp));

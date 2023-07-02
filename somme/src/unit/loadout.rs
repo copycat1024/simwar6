@@ -7,10 +7,10 @@ pub struct Loadout {
 }
 
 impl Loadout {
-    pub fn new(hero: &'static str, team: usize, x: i32, y: i32, attr: &Attr) -> Self {
+    pub fn new(hero: &'static str, team: usize, x: i32, y: i32) -> Self {
         Self {
             unit: Unit { hero, team, x, y },
-            attr: attr.clone(),
+            attr: Attr::new(100, 10),
             hero,
         }
     }

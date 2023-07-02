@@ -1,9 +1,9 @@
-use somme::{Action, ActionKind};
+use somme::{hecs::Entity, Action, ActionKind};
 
 #[derive(Clone, Copy)]
 pub struct Trigger {
     pub action: ActionKind,
-    pub source: usize,
+    pub source: Entity,
 }
 
 impl Trigger {

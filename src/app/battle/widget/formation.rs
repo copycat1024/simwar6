@@ -119,7 +119,7 @@ impl Render for Formation {
         } else {
             false
         };
-        *letter.c = self.get_char(populated);
+        letter.c = self.get_char(populated);
     }
 
     fn layout(&mut self, frame: &mut Frame) {

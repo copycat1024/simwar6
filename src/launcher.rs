@@ -22,7 +22,6 @@ pub fn run() -> Result {
         Loadout::new("norman", 0, 2, 0),
         Loadout::new("norman", 0, 1, 1),
         Loadout::new("norman", 0, 0, 1),
-
         Loadout::new("norman", 1, 1, 2),
         Loadout::new("norman", 1, 1, 1),
         Loadout::new("norman", 1, 1, 0),

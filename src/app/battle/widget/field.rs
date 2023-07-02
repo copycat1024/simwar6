@@ -1,6 +1,6 @@
 use super::{formation, Grid, Slot};
 use crate::app::battle::Trigger;
-use somme::{ActionKind, Unit};
+use somme::{hecs::World, ActionKind, Attr, Unit};
 use soyo::{
     tui::Color,
     view::{Compose, Composer, Frame, NodeList, Renderer},
@@ -58,11 +58,12 @@ impl Compose for Battlefield {
 }
 
 impl Battlefield {
-    pub fn update_units(&mut self, units: &[Unit]) {
-        for (i, unit) in units.iter().enumerate() {
-            let x = unit.pos.x as usize;
-            let y = unit.pos.y as usize;
-            let team = unit.pos.team;
+    pub fn update_units(&mut self, ecs: &World) {
+        for (entity, (unit, attr)) in ecs.query::<(&Unit, &mut Attr)>().iter() {
+            let x = unit.x as usize;
+            let y = unit.y as usize;
+            let team = unit.team;
+            let i = entity.to_bits().get() as usize;
 
             if i >= self.pos.len() {
                 self.pos.push((x, y, team));
@@ -70,14 +71,15 @@ impl Battlefield {
                 self.pos[i] = (x, y, team);
             }
 
-            self.slot(i).set(|w| w.update(&unit.attr));
+            self.slot(i).set(|w| w.update(attr));
         }
     }
 
     pub fn update_trigger(&mut self, trigger: &Trigger) {
         match trigger.action {
             ActionKind::Attack => {
-                self.slot(trigger.source).set(|w| w.attack());
+                self.slot(trigger.source.to_bits().get() as usize)
+                    .set(|w| w.attack());
             }
         }
     }

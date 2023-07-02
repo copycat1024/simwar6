@@ -25,8 +25,8 @@ impl<T: Render> Host for RenderHost<T> {
     fn render(&self, ctx: &mut Context) {
         let frame = self.attr.frame;
         ctx.render(frame.quad(), frame.z_value(), |q, l| {
-            *l.fg = self.attr.fg;
-            *l.bg = self.attr.bg;
+            l.fg = self.attr.fg;
+            l.bg = self.attr.bg;
             self.widget.render(q, l)
         });
     }
