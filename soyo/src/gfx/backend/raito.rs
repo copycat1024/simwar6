@@ -1,6 +1,6 @@
 use super::render::Text;
 use crate::{
-    gfx::{Backend, Color, Event, Key},
+    gfx::{Backend, Color, Event, Key, Slot},
     util::Result,
 };
 use raito::{
@@ -13,8 +13,6 @@ pub struct Raito {
     ctx: Context,
     artist: CellBlit,
     last_update: Instant,
-    x: i32,
-    y: i32,
     first: bool,
 }
 
@@ -35,8 +33,6 @@ impl Raito {
             ctx,
             artist,
             last_update: Instant::now(),
-            x: 0,
-            y: 0,
             first: true,
         }
     }
@@ -73,22 +69,25 @@ impl Backend for Raito {
         Ok(event)
     }
 
-    fn print(&mut self, txt: &str) -> Result {
-        let vertices = txt
-            .chars()
-            .enumerate()
-            .filter(|(_, c)| (*c as u32) > 0x1F && (*c as u32) < 0x7F)
-            .map(|(i, c)| Cell::new(self.x as f32 + i as f32, self.y as f32, 1., c as u8))
+    fn print(&mut self, slots: &[Slot]) -> Result {
+        let vertices = slots
+            .iter()
+            .filter(|slot| {
+                let c = slot.letter.c;
+                (c as u32) > 0x1F && (c as u32) < 0x7F
+            })
+            .map(|slot| {
+                Cell::new(
+                    slot.x as f32,
+                    slot.y as f32,
+                    slot.z as f32,
+                    slot.letter.c as u8,
+                )
+            })
             .collect();
 
         self.artist.draw(vertices);
 
-        Ok(())
-    }
-
-    fn gotoxy(&mut self, x: i32, y: i32) -> Result {
-        self.x = x;
-        self.y = y;
         Ok(())
     }
 
