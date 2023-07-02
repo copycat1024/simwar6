@@ -1,5 +1,4 @@
 use crate::{
-    log::{enable_log, flush_log},
     tui::{backend::Raito, Context},
     util::Result,
 };
@@ -22,16 +21,8 @@ impl<Args: 'static> Launcher<Args> {
         }
     }
 
-    pub fn launch(self, tags: &[u8], app_list: &[Instance<Args>]) -> Result {
-        for tag in tags {
-            enable_log(*tag)
-        }
-
-        let r = self.run(app_list);
-
-        flush_log();
-
-        r
+    pub fn launch(self, app_list: &[Instance<Args>]) -> Result {
+        self.run(app_list)
     }
 
     fn run(self, app_list: &[Instance<Args>]) -> Result {

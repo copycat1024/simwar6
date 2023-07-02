@@ -125,6 +125,9 @@ fn map_key(code: i32) -> Option<Key> {
         0x40000050 => Some(Key::LEFT),
         0x4000004f => Some(Key::RIGHT),
 
-        _ => None,
+        code => {
+            println!("Unknown key {code:08x}");
+            None
+        }
     }
 }

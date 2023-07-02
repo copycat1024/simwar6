@@ -1,5 +1,4 @@
 use crate::{
-    log::{log, tag},
     tui::{backend::Backend, Color, Event, FrameBuffer, Letter, Quad},
     util::Result,
 };
@@ -49,7 +48,6 @@ impl Context {
             .event(self.config.event_period, self.config.update_period)
             .map(|event| {
                 if let Some(event) = event {
-                    writeln!(log(tag::EVENT), "{event:?}");
                     if let Event::Resize { w, h } = event {
                         self.w = w;
                         self.h = h;

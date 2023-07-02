@@ -11,7 +11,7 @@ pub struct Menu {
 
 impl Menu {
     fn align(&self, i: i32, pos: Quad) -> i32 {
-        let w1 = self.list[i].len() as i32;
+        let w1 = self.list[i].len();
         let w2 = pos.w;
         (w2 - w1) / 2
     }

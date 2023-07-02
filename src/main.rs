@@ -18,31 +18,12 @@ fn main() {
 
 fn panic_hook(info: &PanicInfo<'_>) {
     use backtrace::Backtrace;
-    use crossterm::{
-        cursor::Show,
-        style::ResetColor,
-        terminal::{disable_raw_mode, EnableLineWrap, LeaveAlternateScreen},
-        ExecutableCommand,
-    };
-    use soyo::log::flush_log;
 
-    disable_raw_mode().unwrap();
-    std::io::stdout()
-        .execute(LeaveAlternateScreen)
-        .unwrap()
-        .execute(ResetColor)
-        .unwrap()
-        .execute(EnableLineWrap)
-        .unwrap()
-        .execute(Show)
-        .unwrap();
-
-    flush_log();
     if let Some(s) = info.payload().downcast_ref::<&str>() {
         println!("Panic: {s:?}");
     } else {
         println!("Panic unknown");
     }
     let bt = Backtrace::new();
-    println!("{:?}", bt);
+    println!("{bt:?}");
 }

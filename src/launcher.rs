@@ -1,7 +1,6 @@
 use crate::app::{battle, menu, test, ubmp};
 use somme::Loadout;
 use soyo::{
-    log::tag,
     mvc::{App, Instance, Launcher},
     util::Result,
 };
@@ -32,12 +31,5 @@ pub fn run() -> Result {
     let launcher = Launcher::new(unit_cfg);
     let app_list: Vec<Instance<_>> = APP_LIST.iter().map(|i| i.1).collect();
 
-    launcher.launch(
-        &[
-            // enable framework logger
-            // tag::EVENT,
-            tag::DEBUG,
-        ],
-        &app_list,
-    )
+    launcher.launch(&app_list)
 }

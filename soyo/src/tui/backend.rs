@@ -1,9 +1,7 @@
 mod raito;
 mod render;
-mod vt100;
 
 pub use self::raito::Raito;
-pub use vt100::Vt100;
 
 use crate::{
     tui::{Color, Event},
