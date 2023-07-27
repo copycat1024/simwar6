@@ -28,8 +28,6 @@ pub struct Context {
     // internal components
     frame: FrameBuffer,
     config: Config,
-    w: i32,
-    h: i32,
 }
 
 impl Context {
@@ -38,23 +36,16 @@ impl Context {
             backend: Box::new(backend),
             frame: FrameBuffer::default(),
             config: Config::default(),
-            w: 0,
-            h: 0,
         }
     }
 
     pub fn event(&mut self) -> Result<Option<Event>> {
-        self.backend
-            .event(self.config.event_period, self.config.update_period)
-            .map(|event| {
-                if let Some(event) = event {
-                    if let Event::Resize { w, h } = event {
-                        self.w = w;
-                        self.h = h;
-                    }
-                };
-                self.frame.map_event(event)
-            })
+        let Config {
+            event_period,
+            update_period,
+            ..
+        } = self.config;
+        self.backend.event(event_period, update_period)
     }
 
     pub fn render<F>(&mut self, rect: Quad, z: i32, renderer: F)
@@ -75,6 +66,6 @@ impl Context {
     }
 
     pub fn size(&self) -> (i32, i32) {
-        (self.w, self.h)
+        self.backend.size()
     }
 }

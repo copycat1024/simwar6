@@ -16,4 +16,5 @@ pub trait Backend: 'static {
     fn bg(&mut self, c: Color) -> Result;
     fn clear(&mut self) -> Result;
     fn flush(&mut self) -> Result;
+    fn size(&self) -> (i32, i32);
 }

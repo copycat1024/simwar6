@@ -13,7 +13,6 @@ pub struct Raito {
     ctx: Context,
     artist: CellBlit,
     last_update: Instant,
-    first: bool,
 }
 
 impl Raito {
@@ -33,14 +32,13 @@ impl Raito {
             ctx,
             artist,
             last_update: Instant::now(),
-            first: true,
         }
     }
 }
 
 impl Backend for Raito {
     fn event(&mut self, _event_period: Duration, update_period: Duration) -> Result<Option<Event>> {
-        let Self { ctx, first, .. } = self;
+        let Self { ctx, .. } = self;
 
         let event = if let Some(event) = ctx.poll() {
             match event {
@@ -52,9 +50,6 @@ impl Backend for Raito {
                 } => map_key(keycode).map(|key| Event::Key { key }),
                 _ => None,
             }
-        } else if *first {
-            *first = false;
-            Some(Event::Resize { w: 100, h: 40 })
         } else {
             let now = Instant::now();
             let delta = now.duration_since(self.last_update);
@@ -111,6 +106,10 @@ impl Backend for Raito {
     fn flush(&mut self) -> Result {
         self.ctx.swap();
         Ok(())
+    }
+
+    fn size(&self) -> (i32, i32) {
+        (100, 40)
     }
 }
 

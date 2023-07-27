@@ -1,33 +1,14 @@
 use crate::{
-    gfx::{Backend, Color, Event, Letter, Quad, Slot},
+    gfx::{Backend, Color, Letter, Quad, Slot},
     util::Result,
 };
 
 #[derive(Default)]
 pub struct FrameBuffer {
     buffer: Vec<Slot>,
-    w: i32,
-    h: i32,
 }
 
 impl FrameBuffer {
-    pub fn map_event(&mut self, event: Option<Event>) -> Option<Event> {
-        if let Some(event) = event {
-            match event {
-                Event::Resize { w, h } => {
-                    if self.resize(w as i32, h as i32) {
-                        Some(event)
-                    } else {
-                        None
-                    }
-                }
-                _ => Some(event),
-            }
-        } else {
-            None
-        }
-    }
-
     pub fn render<F>(&mut self, rect: Quad, z: i32, renderer: F)
     where
         F: Fn(Quad, &mut Letter),
@@ -59,9 +40,5 @@ impl FrameBuffer {
         backend.flush()?;
 
         Ok(())
-    }
-
-    pub fn resize(&mut self, w: i32, h: i32) -> bool {
-        self.w != w || self.h != h
     }
 }
