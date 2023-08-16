@@ -99,7 +99,7 @@ impl Backend for Raito {
         Ok(())
     }
 
-    fn clear(&mut self) -> Result {
+    fn clear(&mut self, _color: Color) -> Result {
         self.ctx.clear();
         Ok(())
     }

@@ -23,12 +23,20 @@ impl<T: Render> RenderHost<T> {
 
 impl<T: Render> Host for RenderHost<T> {
     fn render(&self, ctx: &mut Context) {
+        use crate::gfx::{Quad, Slot};
         let frame = self.attr.frame;
-        ctx.render(frame.quad(), frame.z_value(), |q, l| {
-            l.fg = self.attr.fg;
-            l.bg = self.attr.bg;
-            self.widget.render(q, l)
+        let rect = frame.quad();
+
+        let iter = rect.iter(false).filter_map(|(x, y)| {
+            let mut slot = Slot::new(rect.x + x, rect.y + y, frame.z_value());
+            let quad = Quad::xywh(x, y, rect.w, rect.h);
+            slot.letter.fg = self.attr.fg;
+            slot.letter.bg = self.attr.bg;
+            self.widget.render(quad, &mut slot.letter);
+            (slot.letter.c != '\0').then_some(slot)
         });
+
+        ctx.render(iter);
     }
 
     fn layout(&mut self, frame: Frame) -> Frame {

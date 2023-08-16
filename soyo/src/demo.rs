@@ -1,5 +1,5 @@
 use soyo::{
-    gfx::{backend::Raito, Color, Context, Event, Quad},
+    gfx::{backend::Raito, Color, Context, Event, Quad, Slot},
     util::Result,
 };
 
@@ -14,16 +14,23 @@ fn main() -> Result {
                 break 'main;
             }
 
-            let mut rect = Quad::xywh(0, 0, 5, 5);
-            ctx.render(rect, 1, |_, letter| {
-                letter.c = 'X';
-                letter.bg = Color::BLUE;
+            let quad = Quad::xywh(0, 0, 5, 5);
+            let iter = quad.iter(true).map(|(x, y)| {
+                let mut slot = Slot::new(x, y, 1);
+                slot.letter.c = 'X';
+                slot.letter.bg = Color::BLUE;
+                slot
             });
-            rect = Quad::xywh(2, 2, 5, 5);
-            ctx.render(rect, 2, |_, letter| {
-                letter.c = 'O';
-                letter.bg = Color::BLUE;
+            ctx.render(iter);
+
+            let quad = Quad::xywh(2, 2, 5, 5);
+            let iter = quad.iter(true).map(|(x, y)| {
+                let mut slot = Slot::new(x, y, 1);
+                slot.letter.c = 'X';
+                slot.letter.bg = Color::RED;
+                slot
             });
+            ctx.render(iter);
 
             ctx.draw()?;
         }

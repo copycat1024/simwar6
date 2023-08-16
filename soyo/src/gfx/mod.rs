@@ -3,7 +3,6 @@ pub mod backend;
 mod color;
 mod context;
 mod event;
-mod frame_buffer;
 mod key;
 mod letter;
 mod quad;
@@ -13,9 +12,7 @@ pub use backend::Backend;
 pub use color::Color;
 pub use context::Context;
 pub use event::Event;
-pub use frame_buffer::FrameBuffer;
 pub use key::Key;
 pub use letter::Letter;
 pub use quad::Quad;
-
-use slot::Slot;
+pub use slot::Slot;

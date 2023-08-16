@@ -1,5 +1,5 @@
 use crate::{
-    gfx::{backend::Backend, Color, Event, FrameBuffer, Letter, Quad},
+    gfx::{backend::Backend, Color, Event, Slot},
     util::Result,
 };
 use std::time::Duration;
@@ -26,7 +26,7 @@ pub struct Context {
     backend: Box<dyn Backend>,
 
     // internal components
-    frame: FrameBuffer,
+    buffer: Vec<Slot>,
     config: Config,
 }
 
@@ -34,7 +34,7 @@ impl Context {
     pub fn new<B: Backend>(backend: B) -> Self {
         Self {
             backend: Box::new(backend),
-            frame: FrameBuffer::default(),
+            buffer: Vec::new(),
             config: Config::default(),
         }
     }
@@ -48,21 +48,39 @@ impl Context {
         self.backend.event(event_period, update_period)
     }
 
-    pub fn render<F>(&mut self, rect: Quad, z: i32, renderer: F)
+    pub fn render<I>(&mut self, slots: I)
     where
-        F: Fn(Quad, &mut Letter),
+        I: IntoIterator<Item = Slot>,
     {
-        self.frame.render(rect, z, renderer);
+        let iter = slots.into_iter().filter(|slot| slot.letter.c != '\0');
+        self.buffer.extend(iter);
     }
 
     pub fn draw(&mut self) -> Result {
-        let Self { frame, backend, .. } = self;
-        frame.draw(backend)
+        let Self {
+            buffer, backend, ..
+        } = self;
+
+        for slot in buffer.iter() {
+            backend.bg(slot.letter.bg)?;
+            backend.fg(slot.letter.fg)?;
+            backend.print(&[slot.clone()])?;
+        }
+
+        backend.flush()
     }
 
     pub fn clear(&mut self) -> Result {
-        let Self { frame, backend, .. } = self;
-        frame.clear(backend, self.config.clear_bg)
+        let Self {
+            buffer,
+            backend,
+            config,
+            ..
+        } = self;
+
+        buffer.clear();
+        backend.clear(config.clear_bg)?;
+        backend.flush()
     }
 
     pub fn size(&self) -> (i32, i32) {
