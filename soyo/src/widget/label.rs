@@ -1,5 +1,5 @@
 use crate::{
-    gfx::{Letter, Quad},
+    gfx::{Quad, Letter},
     util::{FlexVec, HAlign},
     view::Render,
 };
@@ -31,7 +31,7 @@ impl Label {
 }
 
 impl Render for Label {
-    fn render(&self, quad: Quad, letter: &mut Letter) {
+    fn render_rel(&self, quad: Quad, letter: &mut Letter) {
         letter.c = self.text[quad.x - self.align(quad)];
     }
 }

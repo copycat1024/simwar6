@@ -109,7 +109,7 @@ impl Utable {
 }
 
 impl Render for Utable {
-    fn render(&self, quad: Quad, letter: &mut Letter) {
+    fn render_rel(&self, quad: Quad, letter: &mut Letter) {
         if quad.x < 6 {
             self.render_row_title(quad, letter)
         } else if quad.y < 1 {
