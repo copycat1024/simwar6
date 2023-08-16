@@ -1,6 +1,6 @@
 use crate::usym::hbox;
 use soyo::{
-    gfx::{Letter, Quad},
+    gfx::{Letter, Rect},
     view::{Frame, Render, Renderer},
 };
 
@@ -33,26 +33,26 @@ impl Grid {
         }
     }
 
-    fn render_intersect(&self, quad: Quad, letter: &mut Letter) {
-        if quad.x == 0 {
-            if quad.y == 0 {
+    fn render_intersect(&self, rect: Rect, letter: &mut Letter) {
+        if rect.x == 0 {
+            if rect.y == 0 {
                 letter.c = hbox::CTL;
-            } else if quad.y == quad.h - 1 {
+            } else if rect.y == rect.h - 1 {
                 letter.c = hbox::CBL;
             } else {
                 letter.c = hbox::IVL;
             }
-        } else if quad.x == quad.w - 1 {
-            if quad.y == 0 {
+        } else if rect.x == rect.w - 1 {
+            if rect.y == 0 {
                 letter.c = hbox::CTR;
-            } else if quad.y == quad.h - 1 {
+            } else if rect.y == rect.h - 1 {
                 letter.c = hbox::CBR;
             } else {
                 letter.c = hbox::IVR;
             }
-        } else if quad.y == 0 {
+        } else if rect.y == 0 {
             letter.c = hbox::IHT;
-        } else if quad.y == quad.h - 1 {
+        } else if rect.y == rect.h - 1 {
             letter.c = hbox::IHB;
         } else {
             letter.c = hbox::CRX;
@@ -80,12 +80,12 @@ impl Default for Grid {
 }
 
 impl Render for Grid {
-    fn render(&self, quad: Quad, letter: &mut Letter) {
-        let v = quad.x % (self.sw + 1) == 0;
-        let h = quad.y % (self.sh + 1) == 0;
+    fn render(&self, rect: Rect, letter: &mut Letter) {
+        let v = rect.x % (self.sw + 1) == 0;
+        let h = rect.y % (self.sh + 1) == 0;
 
         if h && v {
-            self.render_intersect(quad, letter);
+            self.render_intersect(rect, letter);
         } else if h {
             self.render_horizon_line(letter);
         } else if v {

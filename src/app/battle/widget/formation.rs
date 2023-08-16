@@ -1,7 +1,7 @@
 use crate::util::math::Scale;
 use rand_xoshiro::Xoshiro256PlusPlus;
 use soyo::{
-    gfx::{Letter, Quad},
+    gfx::{Letter, Rect},
     view::{Frame, Render},
 };
 
@@ -41,33 +41,33 @@ impl Formation {
         self.scale.set_value_and_max(value, max);
     }
 
-    fn is_line(&self, quad: Quad) -> bool {
+    fn is_line(&self, rect: Rect) -> bool {
         match self.status {
-            Status::Idle => quad.x % 2 == 0,
-            Status::Strike => quad.x % 2 == 1,
+            Status::Idle => rect.x % 2 == 0,
+            Status::Strike => rect.x % 2 == 1,
         }
     }
 
-    fn is_margin(&self, quad: Quad) -> bool {
-        quad.x < 0 || quad.x / 2 >= quad.w / 2
+    fn is_margin(&self, rect: Rect) -> bool {
+        rect.x < 0 || rect.x / 2 >= rect.w / 2
     }
 
-    fn transform_quad(&self, quad: &mut Quad) {
-        quad.x = match self.orient {
-            Orient::Right => quad.x - 1,
-            Orient::Left => quad.w - quad.x - 2,
+    fn transform_quad(&self, rect: &mut Rect) {
+        rect.x = match self.orient {
+            Orient::Right => rect.x - 1,
+            Orient::Left => rect.w - rect.x - 2,
         };
-        quad.w -= 1;
+        rect.w -= 1;
     }
 
-    fn get_id(&self, mut quad: Quad) -> Option<i32> {
-        self.transform_quad(&mut quad);
+    fn get_id(&self, mut rect: Rect) -> Option<i32> {
+        self.transform_quad(&mut rect);
 
-        if self.is_margin(quad) || !self.is_line(quad) {
+        if self.is_margin(rect) || !self.is_line(rect) {
             None
         } else {
-            let x = quad.x / 2;
-            Some(x * quad.h + quad.y)
+            let x = rect.x / 2;
+            Some(x * rect.h + rect.y)
         }
     }
 
@@ -113,8 +113,8 @@ impl Default for Formation {
 }
 
 impl Render for Formation {
-    fn render(&self, quad: Quad, letter: &mut Letter) {
-        let populated = if let Some(id) = self.get_id(quad) {
+    fn render(&self, rect: Rect, letter: &mut Letter) {
+        let populated = if let Some(id) = self.get_id(rect) {
             self.is_populated(id)
         } else {
             false

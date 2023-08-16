@@ -1,5 +1,5 @@
 use soyo::{
-    gfx::{Color, Letter, Quad},
+    gfx::{Color, Letter, Rect},
     view::Render,
 };
 use std::char::{from_digit, from_u32};
@@ -20,11 +20,11 @@ impl Utable {
         (6 + 32, 17)
     }
 
-    fn render_row_title(&self, quad: Quad, letter: &mut Letter) {
-        let row = (quad.y - 1) as u32;
+    fn render_row_title(&self, rect: Rect, letter: &mut Letter) {
+        let row = (rect.y - 1) as u32;
         let cell = self.cell as u32;
-        letter.c = if quad.y > 0 {
-            match quad.x {
+        letter.c = if rect.y > 0 {
+            match rect.x {
                 0 => 'U',
                 1 => '+',
                 2 => from_digit(cell / 16, 16).unwrap_or('\0'),
@@ -38,8 +38,8 @@ impl Utable {
         }
     }
 
-    fn render_col_title(&self, quad: Quad, letter: &mut Letter) {
-        let col = (quad.x - 6) as u32;
+    fn render_col_title(&self, rect: Rect, letter: &mut Letter) {
+        let col = (rect.x - 6) as u32;
         letter.c = if col % 2 == 0 {
             ' '
         } else {
@@ -47,12 +47,12 @@ impl Utable {
         }
     }
 
-    fn render_item(&self, quad: Quad, letter: &mut Letter) {
-        letter.c = if quad.x % 2 == 0 {
+    fn render_item(&self, rect: Rect, letter: &mut Letter) {
+        letter.c = if rect.x % 2 == 0 {
             ' '
         } else {
-            let row = quad.y - 1;
-            let col = (quad.x - 6) / 2;
+            let row = rect.y - 1;
+            let col = (rect.x - 6) / 2;
             let code = self.get_code(row as u32, col as u32);
 
             let (c, fg) = Self::map_basic(code);
@@ -109,13 +109,13 @@ impl Utable {
 }
 
 impl Render for Utable {
-    fn render_rel(&self, quad: Quad, letter: &mut Letter) {
-        if quad.x < 6 {
-            self.render_row_title(quad, letter)
-        } else if quad.y < 1 {
-            self.render_col_title(quad, letter)
+    fn render_rel(&self, rect: Rect, letter: &mut Letter) {
+        if rect.x < 6 {
+            self.render_row_title(rect, letter)
+        } else if rect.y < 1 {
+            self.render_col_title(rect, letter)
         } else {
-            self.render_item(quad, letter)
+            self.render_item(rect, letter)
         }
     }
 }

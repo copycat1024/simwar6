@@ -1,5 +1,5 @@
 use crate::{
-    gfx::{Backend, Color, Letter, Quad, Slot},
+    gfx::{Backend, Color, Letter, Rect, Slot},
     util::Result,
 };
 
@@ -9,14 +9,14 @@ pub struct FrameBuffer {
 }
 
 impl FrameBuffer {
-    pub fn render<F>(&mut self, rect: Quad, z: i32, renderer: F)
+    pub fn render<F>(&mut self, rect: Rect, z: i32, renderer: F)
     where
-        F: Fn(Quad, &mut Letter),
+        F: Fn(Rect, &mut Letter),
     {
         let iter = rect.iter(false).filter_map(|(x, y)| {
             let mut slot = Slot::new(rect.x + x, rect.y + y, z);
-            let quad = Quad::xywh(x, y, rect.w, rect.h);
-            renderer(quad, &mut slot.letter);
+            let rect = Rect::xywh(x, y, rect.w, rect.h);
+            renderer(rect, &mut slot.letter);
 
             (slot.letter.c != '\0').then_some(slot)
         });

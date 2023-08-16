@@ -1,6 +1,6 @@
 use crate::util::math::Scale;
 use soyo::{
-    gfx::{Letter, Quad},
+    gfx::{Letter, Rect},
     view::{Frame, Render},
 };
 
@@ -30,10 +30,10 @@ impl PercentBar {
 }
 
 impl Render for PercentBar {
-    fn render(&self, quad: Quad, letter: &mut Letter) {
+    fn render(&self, rect: Rect, letter: &mut Letter) {
         use std::cmp::Ordering;
 
-        letter.c = match quad.x.cmp(&self.block) {
+        letter.c = match rect.x.cmp(&self.block) {
             Ordering::Greater => PARTS[0],
             Ordering::Less => PARTS[PARTS.len() - 1],
             Ordering::Equal => PARTS[self.part as usize],

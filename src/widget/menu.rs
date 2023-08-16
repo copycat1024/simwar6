@@ -1,5 +1,5 @@
 use soyo::{
-    gfx::{Color, Letter, Quad},
+    gfx::{Color, Letter, Rect},
     util::FlexVec,
     view::Render,
 };
@@ -10,7 +10,7 @@ pub struct Menu {
 }
 
 impl Menu {
-    fn align(&self, i: i32, pos: Quad) -> i32 {
+    fn align(&self, i: i32, pos: Rect) -> i32 {
         let w1 = self.list[i].len();
         let w2 = pos.w;
         (w2 - w1) / 2
@@ -41,11 +41,11 @@ impl Default for Menu {
 }
 
 impl Render for Menu {
-    fn render_rel(&self, quad: Quad, letter: &mut Letter) {
-        let text = &self.list[quad.y];
+    fn render_rel(&self, rect: Rect, letter: &mut Letter) {
+        let text = &self.list[rect.y];
 
-        letter.c = text[quad.x - self.align(quad.y, quad)];
-        if quad.y == self.item {
+        letter.c = text[rect.x - self.align(rect.y, rect)];
+        if rect.y == self.item {
             letter.bg = Color::BLUE
         };
     }

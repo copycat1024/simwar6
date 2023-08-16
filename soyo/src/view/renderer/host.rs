@@ -24,19 +24,19 @@ impl<T: Render> RenderHost<T> {
 impl<T: Render> Host for RenderHost<T> {
     fn render(&self, ctx: &mut Context) {
         let frame = self.attr.frame;
-        let quad = frame.quad();
+        let rect = frame.rect();
 
-        // use crate::gfx::{Quad, Slot};
+        // use crate::gfx::{Rect, Slot};
         // let iter = rect.iter(false).filter_map(|(x, y)| {
         //     let mut slot = Slot::new(rect.x + x, rect.y + y, frame.z_value());
-        //     let quad = Quad::xywh(x, y, rect.w, rect.h);
+        //     let rect = Rect::xywh(x, y, rect.w, rect.h);
         //     slot.letter.fg = self.attr.fg;
         //     slot.letter.bg = self.attr.bg;
-        //     self.widget.render(quad, &mut slot.letter);
+        //     self.widget.render(rect, &mut slot.letter);
         //     (slot.letter.c != '\0').then_some(slot)
         // });
 
-        ctx.render(self.widget.render(quad, frame.z_value()));
+        ctx.render(self.widget.render(rect, frame.z_value()));
     }
 
     fn layout(&mut self, frame: Frame) -> Frame {

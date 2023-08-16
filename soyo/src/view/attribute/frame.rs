@@ -1,4 +1,4 @@
-use crate::gfx::Quad;
+use crate::gfx::Rect;
 
 #[derive(Clone, Copy, Default)]
 pub struct Frame {
@@ -96,8 +96,8 @@ impl Frame {
         }
     }
 
-    pub fn quad(&self) -> Quad {
-        Quad {
+    pub fn rect(&self) -> Rect {
+        Rect {
             x: self.x,
             y: self.y,
             w: self.w,
