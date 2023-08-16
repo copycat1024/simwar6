@@ -16,6 +16,7 @@ pub struct Raito {
 }
 
 impl Raito {
+    #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         let ctx = Builder::new("Test").build();
         let text = Text::new(include_bytes!("ChivoMono-Light.otf"), 16.);

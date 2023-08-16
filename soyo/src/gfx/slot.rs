@@ -15,9 +15,9 @@ impl Slot {
             y,
             z,
             letter: Letter {
-                fg: Color::WHITE.into(),
-                bg: Color::BLACK.into(),
-                c: '\0'.into(),
+                fg: Color::WHITE,
+                bg: Color::BLACK,
+                c: '\0',
             },
         }
     }
