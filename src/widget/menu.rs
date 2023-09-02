@@ -1,7 +1,7 @@
 use soyo::{
-    gfx::{Color, Letter, Rect},
+    gfx::{Color, Rect},
     util::FlexVec,
-    view::Render,
+    view::{Render, Symbol},
 };
 
 pub struct Menu {
@@ -41,12 +41,12 @@ impl Default for Menu {
 }
 
 impl Render for Menu {
-    fn render_rel(&self, rect: Rect, letter: &mut Letter) {
+    fn render_rel(&self, rect: Rect, letter: &mut Symbol) {
         let text = &self.list[rect.y];
 
         letter.c = text[rect.x - self.align(rect.y, rect)];
         if rect.y == self.item {
-            letter.bg = Color::BLUE
+            letter.bg = Some(Color::BLUE)
         };
     }
 }

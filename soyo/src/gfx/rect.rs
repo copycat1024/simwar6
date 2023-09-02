@@ -36,6 +36,10 @@ impl Rect {
             && self.y + self.h <= src.y + src.h
     }
 
+    pub fn point_inside(&self, x: i32, y: i32) -> bool {
+        x >= self.x && y >= self.y && x < self.x + self.w && y < self.y + self.h
+    }
+
     pub fn inter(&self, b: &Self) -> Self {
         use std::cmp::{max, min};
 
@@ -52,24 +56,28 @@ impl Rect {
         }
     }
 
-    pub fn iter(&self, abs: bool) -> Iter<'_> {
-        Iter::new(self, abs)
+    pub fn iter(&self, abs: bool) -> RectIter {
+        RectIter::new(self, abs)
     }
 }
 
-pub struct Iter<'a> {
-    src: &'a Rect,
+pub struct RectIter {
+    src: Rect,
     abs: bool,
     i: i32,
 }
 
-impl<'a> Iter<'a> {
-    pub fn new(src: &'a Rect, abs: bool) -> Self {
-        Self { src, abs, i: 0 }
+impl RectIter {
+    pub fn new(src: &Rect, abs: bool) -> Self {
+        Self {
+            src: *src,
+            abs,
+            i: 0,
+        }
     }
 }
 
-impl<'a> Iterator for Iter<'a> {
+impl Iterator for RectIter {
     type Item = (i32, i32);
 
     fn next(&mut self) -> Option<Self::Item> {

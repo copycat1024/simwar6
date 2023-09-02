@@ -1,7 +1,7 @@
 use crate::{
-    gfx::{Rect, Letter},
+    gfx::Rect,
     util::{FlexVec, HAlign},
-    view::Render,
+    view::{Render, Symbol},
 };
 use std::fmt::Arguments;
 
@@ -31,8 +31,8 @@ impl Label {
 }
 
 impl Render for Label {
-    fn render_rel(&self, rect: Rect, letter: &mut Letter) {
-        letter.c = self.text[rect.x - self.align(rect)];
+    fn render_rel(&self, rect: Rect, symbol: &mut Symbol) {
+        symbol.c = self.text[rect.x - self.align(rect)];
     }
 }
 

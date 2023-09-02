@@ -1,4 +1,4 @@
-use super::Render;
+use super::{Render, Zone};
 use crate::{
     gfx::Context,
     view::{Attribute, Frame, Host},
@@ -26,17 +26,10 @@ impl<T: Render> Host for RenderHost<T> {
         let frame = self.attr.frame;
         let rect = frame.rect();
 
-        // use crate::gfx::{Rect, Slot};
-        // let iter = rect.iter(false).filter_map(|(x, y)| {
-        //     let mut slot = Slot::new(rect.x + x, rect.y + y, frame.z_value());
-        //     let rect = Rect::xywh(x, y, rect.w, rect.h);
-        //     slot.letter.fg = self.attr.fg;
-        //     slot.letter.bg = self.attr.bg;
-        //     self.widget.render(rect, &mut slot.letter);
-        //     (slot.letter.c != '\0').then_some(slot)
-        // });
+        let mut zone = Zone::new(self.attr);
+        zone.collect(self.widget.render(rect, frame.z_value()));
 
-        ctx.render(self.widget.render(rect, frame.z_value()));
+        ctx.render(zone);
     }
 
     fn layout(&mut self, frame: Frame) -> Frame {

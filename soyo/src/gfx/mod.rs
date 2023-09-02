@@ -14,5 +14,5 @@ pub use context::Context;
 pub use event::Event;
 pub use key::Key;
 pub use letter::Letter;
-pub use rect::Rect;
+pub use rect::{Rect, RectIter};
 pub use slot::Slot;

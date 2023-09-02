@@ -6,9 +6,6 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceRoot}/target/debug/simwars5.exe",
-            "env": {
-                "RUST_BACKTRACE": "1"
-            },
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",

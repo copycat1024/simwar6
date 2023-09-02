@@ -1,21 +1,19 @@
-use crate::{
-    gfx::{Letter, Rect, Slot},
-    view::Frame,
-};
+use super::Symbol;
+use crate::{gfx::Rect, view::Frame};
 
 pub trait Render: 'static {
-    fn render(&self, rect: Rect, z: i32) -> Vec<Slot> {
+    fn render(&self, rect: Rect, _z: i32) -> Vec<Symbol> {
         rect.iter(false)
             .filter_map(|(x, y)| {
-                let mut slot = Slot::new(rect.x + x, rect.y + y, z);
+                let mut sym = Symbol::new(rect.x + x, rect.y + y, '\0');
                 let rect = Rect::xywh(x, y, rect.w, rect.h);
-                self.render_rel(rect, &mut slot.letter);
-                (slot.letter.c != '\0').then_some(slot)
+                self.render_rel(rect, &mut sym);
+                (sym.c != '\0').then_some(sym)
             })
             .collect()
     }
 
-    fn render_rel(&self, _rect: Rect, _letter: &mut Letter) {}
+    fn render_rel(&self, _rect: Rect, _sym: &mut Symbol) {}
 
     fn layout(&mut self, _: &mut Frame) {}
 

@@ -1,6 +1,6 @@
 use soyo::{
-    gfx::{Color, Letter, Rect},
-    view::Render,
+    gfx::{Color, Rect},
+    view::{Render, Symbol},
 };
 use std::char::{from_digit, from_u32};
 use unic_ucd_category::GeneralCategory;
@@ -20,7 +20,7 @@ impl Utable {
         (6 + 32, 17)
     }
 
-    fn render_row_title(&self, rect: Rect, letter: &mut Letter) {
+    fn render_row_title(&self, rect: Rect, letter: &mut Symbol) {
         let row = (rect.y - 1) as u32;
         let cell = self.cell as u32;
         letter.c = if rect.y > 0 {
@@ -38,7 +38,7 @@ impl Utable {
         }
     }
 
-    fn render_col_title(&self, rect: Rect, letter: &mut Letter) {
+    fn render_col_title(&self, rect: Rect, letter: &mut Symbol) {
         let col = (rect.x - 6) as u32;
         letter.c = if col % 2 == 0 {
             ' '
@@ -47,7 +47,7 @@ impl Utable {
         }
     }
 
-    fn render_item(&self, rect: Rect, letter: &mut Letter) {
+    fn render_item(&self, rect: Rect, letter: &mut Symbol) {
         letter.c = if rect.x % 2 == 0 {
             ' '
         } else {
@@ -56,7 +56,7 @@ impl Utable {
             let code = self.get_code(row as u32, col as u32);
 
             let (c, fg) = Self::map_basic(code);
-            letter.fg = fg;
+            letter.fg = Some(fg);
             c
         }
     }
@@ -109,7 +109,7 @@ impl Utable {
 }
 
 impl Render for Utable {
-    fn render_rel(&self, rect: Rect, letter: &mut Letter) {
+    fn render_rel(&self, rect: Rect, letter: &mut Symbol) {
         if rect.x < 6 {
             self.render_row_title(rect, letter)
         } else if rect.y < 1 {
