@@ -1,8 +1,8 @@
 use crate::util::math::Scale;
 use rand_xoshiro::Xoshiro256PlusPlus;
 use soyo::{
-    gfx::{Letter, Rect},
-    view::{Frame, Render},
+    gfx::Rect,
+    view::{Frame, Render, Symbol},
 };
 
 pub enum Orient {
@@ -113,13 +113,13 @@ impl Default for Formation {
 }
 
 impl Render for Formation {
-    fn render(&self, rect: Rect, letter: &mut Letter) {
+    fn render_rel(&self, rect: Rect, sym: &mut Symbol) {
         let populated = if let Some(id) = self.get_id(rect) {
             self.is_populated(id)
         } else {
             false
         };
-        letter.c = self.get_char(populated);
+        sym.c = self.get_char(populated);
     }
 
     fn layout(&mut self, frame: &mut Frame) {

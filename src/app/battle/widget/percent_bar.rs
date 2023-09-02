@@ -1,10 +1,11 @@
 use crate::util::math::Scale;
 use soyo::{
-    gfx::{Letter, Rect},
-    view::{Frame, Render},
+    gfx::Rect,
+    view::{Frame, Render, Symbol},
 };
 
-const PARTS: [char; 5] = [' ', '\u{258e}', '\u{258c}', '\u{258a}', '\u{2588}'];
+// const PARTS: [char; 5] = [' ', '\u{258e}', '\u{258c}', '\u{258a}', '\u{2588}'];
+const PARTS: [char; 5] = [' ', '#', '#', '#', '#'];
 const PART_COUNT: i32 = (PARTS.len() as i32) - 1;
 
 #[derive(Default)]
@@ -30,10 +31,10 @@ impl PercentBar {
 }
 
 impl Render for PercentBar {
-    fn render(&self, rect: Rect, letter: &mut Letter) {
+    fn render_rel(&self, rect: Rect, symbol: &mut Symbol) {
         use std::cmp::Ordering;
 
-        letter.c = match rect.x.cmp(&self.block) {
+        symbol.c = match rect.x.cmp(&self.block) {
             Ordering::Greater => PARTS[0],
             Ordering::Less => PARTS[PARTS.len() - 1],
             Ordering::Equal => PARTS[self.part as usize],

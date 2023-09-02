@@ -1,15 +1,19 @@
 use super::{formation, Grid, Slot};
 use crate::app::battle::Trigger;
-use somme::{hecs::World, ActionKind, Attr, Unit};
+use somme::{
+    hecs::{Entity, World},
+    ActionKind, Attr, Unit,
+};
 use soyo::{
     gfx::Color,
     view::{Compose, Composer, Frame, NodeList, Renderer},
 };
+use std::collections::HashMap;
 
 pub struct Battlefield {
     grid: Renderer<Grid>,
     slot: [Composer<Slot>; 18],
-    pos: Vec<(usize, usize, usize)>,
+    pos: HashMap<Entity, (usize, usize, usize)>,
 }
 
 impl Battlefield {}
@@ -19,7 +23,7 @@ impl Default for Battlefield {
         Self {
             grid: Renderer::new(Grid::new(7, 3, 16, 8)),
             slot: Default::default(),
-            pos: Vec::new(),
+            pos: HashMap::new(),
         }
     }
 }
@@ -63,28 +67,22 @@ impl Battlefield {
             let x = unit.x as usize;
             let y = unit.y as usize;
             let team = unit.team;
-            let i = entity.to_bits().get() as usize;
 
-            if i >= self.pos.len() {
-                self.pos.push((x, y, team));
-            } else {
-                self.pos[i] = (x, y, team);
-            }
+            self.pos.insert(entity, (x, y, team));
 
-            self.slot(i).set(|w| w.update(attr));
+            self.slot(&entity).set(|w| w.update(attr));
         }
     }
 
     pub fn update_trigger(&mut self, trigger: &Trigger) {
         match trigger.action {
             ActionKind::Attack => {
-                self.slot(trigger.source.to_bits().get() as usize)
-                    .set(|w| w.attack());
+                self.slot(&trigger.source).set(|w| w.attack());
             }
         }
     }
 
-    fn slot(&mut self, i: usize) -> &mut Composer<Slot> {
+    fn slot(&mut self, i: &Entity) -> &mut Composer<Slot> {
         let (x, y, t) = self.pos[i];
         let i = x + y * 3 + t * 9;
         &mut self.slot[i]

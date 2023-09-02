@@ -68,16 +68,17 @@ impl Backend for Raito {
     fn print(&mut self, slots: &[Slot]) -> Result {
         let vertices = slots
             .iter()
-            .filter(|slot| {
-                let c = slot.letter.c;
-                (c as u32) > 0x1F && (c as u32) < 0x7F
-            })
             .map(|slot| {
+                let c = slot.letter.c;
                 Cell::new(
                     slot.x as f32,
                     slot.y as f32,
                     slot.z as f32,
-                    slot.letter.c as u8,
+                    if (c as u32) > 0x1F && (c as u32) < 0x7F {
+                        slot.letter.c
+                    } else {
+                        '?'
+                    } as u8,
                 )
             })
             .collect();

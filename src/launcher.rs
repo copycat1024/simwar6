@@ -1,4 +1,4 @@
-use crate::app::{menu, test, ubmp};
+use crate::app::{battle, menu, test, ubmp};
 use somme::Loadout;
 use soyo::{
     mvc::{App, Instance, Launcher},
@@ -7,9 +7,9 @@ use soyo::{
 
 pub type Args = [Loadout; 10];
 
-pub const APP_LIST: [(&str, Instance<Args>); 3] = [
+pub const APP_LIST: [(&str, Instance<Args>); 4] = [
     ("Launcher", App::<_, menu::Model>::run),
-    // ("Battle", App::<_, battle::Model>::run),
+    ("Battle", App::<_, battle::Model>::run),
     ("Test app", App::<_, test::Model>::run),
     ("Unicode plane 0", App::<_, ubmp::Model>::run),
 ];

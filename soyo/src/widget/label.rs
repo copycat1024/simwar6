@@ -1,28 +1,41 @@
 use crate::{
     gfx::Rect,
-    util::{FlexVec, HAlign},
+    util::HAlign,
     view::{Render, Symbol},
 };
-use std::fmt::Arguments;
+use std::{
+    cmp::min,
+    fmt::{Arguments, Write},
+};
 
 pub struct Label {
-    text: FlexVec<char>,
+    text: String,
     ha: HAlign,
+    len: usize,
 }
 
 impl Label {
-    fn align(&self, pos: Rect) -> i32 {
-        let w1 = self.text.len();
-        let w2 = pos.w;
-        match self.ha {
-            HAlign::Center => (w2 - w1) / 2,
+    fn align(&self, pos: Rect) -> (i32, usize, usize) {
+        let w = pos.w;
+        let wi = self.len as i32;
+
+        let len = min(w, wi);
+
+        let coeff = match self.ha {
+            HAlign::Center => 1,
             HAlign::Left => 0,
-            HAlign::Right => w2 - w1,
-        }
+            HAlign::Right => 2,
+        };
+        let x = (w - len) * coeff / 2;
+        let xi = (wi - len) * coeff / 2;
+
+        (x, xi as usize, len as usize)
     }
 
     pub fn write_fmt(&mut self, fmt: Arguments<'_>) {
-        write!(self.text, "{}", fmt);
+        self.text.clear();
+        write!(self.text, "{}", fmt).unwrap();
+        self.len = self.text.chars().count();
     }
 
     pub fn set_align(&mut self, ha: HAlign) {
@@ -31,16 +44,25 @@ impl Label {
 }
 
 impl Render for Label {
-    fn render_rel(&self, rect: Rect, symbol: &mut Symbol) {
-        symbol.c = self.text[rect.x - self.align(rect)];
+    fn render(&self, rect: Rect, _z: i32) -> Vec<Symbol> {
+        let (x, xi, len) = self.align(rect);
+
+        self.text
+            .chars()
+            .enumerate()
+            .skip(xi)
+            .take(len)
+            .map(|(i, c)| Symbol::new(x + i as i32, rect.y, c))
+            .collect()
     }
 }
 
 impl Default for Label {
     fn default() -> Self {
         Self {
-            text: FlexVec::new(' '),
+            text: String::new(),
             ha: HAlign::Center,
+            len: 0,
         }
     }
 }

@@ -1,7 +1,7 @@
 use crate::usym::hbox;
 use soyo::{
-    gfx::{Letter, Rect},
-    view::{Frame, Render, Renderer},
+    gfx::Rect,
+    view::{Frame, Render, Renderer, Symbol},
 };
 
 pub struct Grid {
@@ -33,38 +33,38 @@ impl Grid {
         }
     }
 
-    fn render_intersect(&self, rect: Rect, letter: &mut Letter) {
+    fn render_intersect(&self, rect: Rect, symbol: &mut Symbol) {
         if rect.x == 0 {
             if rect.y == 0 {
-                letter.c = hbox::CTL;
+                symbol.c = hbox::CTL;
             } else if rect.y == rect.h - 1 {
-                letter.c = hbox::CBL;
+                symbol.c = hbox::CBL;
             } else {
-                letter.c = hbox::IVL;
+                symbol.c = hbox::IVL;
             }
         } else if rect.x == rect.w - 1 {
             if rect.y == 0 {
-                letter.c = hbox::CTR;
+                symbol.c = hbox::CTR;
             } else if rect.y == rect.h - 1 {
-                letter.c = hbox::CBR;
+                symbol.c = hbox::CBR;
             } else {
-                letter.c = hbox::IVR;
+                symbol.c = hbox::IVR;
             }
         } else if rect.y == 0 {
-            letter.c = hbox::IHT;
+            symbol.c = hbox::IHT;
         } else if rect.y == rect.h - 1 {
-            letter.c = hbox::IHB;
+            symbol.c = hbox::IHB;
         } else {
-            letter.c = hbox::CRX;
+            symbol.c = hbox::CRX;
         }
     }
 
-    fn render_horizon_line(&self, letter: &mut Letter) {
-        letter.c = hbox::LNH;
+    fn render_horizon_line(&self, symbol: &mut Symbol) {
+        symbol.c = hbox::LNH;
     }
 
-    fn render_vertical_line(&self, letter: &mut Letter) {
-        letter.c = hbox::LNV;
+    fn render_vertical_line(&self, symbol: &mut Symbol) {
+        symbol.c = hbox::LNV;
     }
 }
 
@@ -80,16 +80,16 @@ impl Default for Grid {
 }
 
 impl Render for Grid {
-    fn render(&self, rect: Rect, letter: &mut Letter) {
+    fn render_rel(&self, rect: Rect, symbol: &mut Symbol) {
         let v = rect.x % (self.sw + 1) == 0;
         let h = rect.y % (self.sh + 1) == 0;
 
         if h && v {
-            self.render_intersect(rect, letter);
+            self.render_intersect(rect, symbol);
         } else if h {
-            self.render_horizon_line(letter);
+            self.render_horizon_line(symbol);
         } else if v {
-            self.render_vertical_line(letter);
+            self.render_vertical_line(symbol);
         }
     }
 }
