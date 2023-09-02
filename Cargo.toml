@@ -15,5 +15,4 @@ rand_xoshiro = "0.6.0"
 rand = "0.8.5"
 
 soyo = { path = "soyo" }
-somme = { path = "somme" }
 raito = { path = "raito" }
