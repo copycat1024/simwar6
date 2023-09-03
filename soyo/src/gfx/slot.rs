@@ -1,24 +1,11 @@
-use crate::gfx::{Color, Letter};
+use crate::gfx::Color;
 
 #[derive(Clone)]
 pub struct Slot {
     pub x: i32,
     pub y: i32,
     pub z: i32,
-    pub letter: Letter,
-}
-
-impl Slot {
-    pub fn new(x: i32, y: i32, z: i32) -> Self {
-        Self {
-            x,
-            y,
-            z,
-            letter: Letter {
-                fg: Color::WHITE,
-                bg: Color::BLACK,
-                c: '\0',
-            },
-        }
-    }
+    pub fg: Color,
+    pub bg: Color,
+    pub c: char,
 }

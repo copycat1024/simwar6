@@ -52,7 +52,7 @@ impl Context {
     where
         I: IntoIterator<Item = Slot>,
     {
-        let iter = slots.into_iter().filter(|slot| slot.letter.c != '\0');
+        let iter = slots.into_iter().filter(|slot| slot.c != '\0');
         self.buffer.extend(iter);
     }
 
@@ -62,8 +62,8 @@ impl Context {
         } = self;
 
         for slot in buffer.iter() {
-            backend.bg(slot.letter.bg)?;
-            backend.fg(slot.letter.fg)?;
+            backend.bg(slot.bg)?;
+            backend.fg(slot.fg)?;
             backend.print(&[slot.clone()])?;
         }
 

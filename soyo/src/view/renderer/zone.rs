@@ -66,7 +66,7 @@ impl Iterator for ZoneIter {
         let Self { iter, zone } = self;
         for (x, y) in iter.by_ref() {
             if let Some(slot) = zone.map.remove(&(x, y)) {
-                if slot.letter.c != '\0' {
+                if slot.c != '\0' {
                     return Some(slot);
                 }
             } else if zone.attr.fill {

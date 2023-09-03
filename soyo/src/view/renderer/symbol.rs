@@ -26,11 +26,13 @@ impl Symbol {
 
     pub fn to_slot(self, attr: &Attribute) -> Slot {
         let Self { x, y, z, c, bg, fg } = self;
-        let z = z.unwrap_or(attr.frame.z_value());
-        let mut slot = Slot::new(x, y, z);
-        slot.letter.c = c;
-        slot.letter.bg = bg.unwrap_or(attr.bg);
-        slot.letter.fg = fg.unwrap_or(attr.fg);
-        slot
+        Slot {
+            x,
+            y,
+            z: z.unwrap_or(attr.frame.z_value()),
+            c,
+            bg: bg.unwrap_or(attr.bg),
+            fg: fg.unwrap_or(attr.fg),
+        }
     }
 }
