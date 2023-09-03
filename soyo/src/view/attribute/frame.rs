@@ -4,9 +4,9 @@ use crate::gfx::Rect;
 pub struct Frame {
     pub x: i32,
     pub y: i32,
+    pub z: i32,
     pub w: i32,
     pub h: i32,
-    pub z: i32,
 }
 
 impl Frame {
@@ -14,9 +14,9 @@ impl Frame {
         Self {
             x: 0,
             y: 0,
+            z: 0,
             w,
             h,
-            z: 0,
         }
     }
 

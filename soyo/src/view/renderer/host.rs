@@ -27,7 +27,7 @@ impl<T: Render> Host for RenderHost<T> {
         let rect = frame.rect();
 
         let mut zone = Zone::new(self.attr);
-        zone.collect(self.widget.render(rect, frame.z_value()));
+        zone.collect(self.widget.render(rect));
 
         ctx.render(zone);
     }
