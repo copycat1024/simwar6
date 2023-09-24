@@ -4,6 +4,7 @@ mod flow;
 mod launcher;
 mod model;
 mod view;
+mod visitor;
 
 pub use app::App;
 pub use dispatch::Dispatch;

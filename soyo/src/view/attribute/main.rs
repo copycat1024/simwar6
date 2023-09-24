@@ -7,6 +7,7 @@ pub struct Attribute {
     pub fg: Color,
     pub bg: Color,
     pub fill: bool,
+    pub layout_fn: fn(Frame) -> Frame,
 }
 
 impl Default for Attribute {
@@ -16,6 +17,7 @@ impl Default for Attribute {
             fg: Color::WHITE,
             bg: Color::BLACK,
             fill: true,
+            layout_fn: |f| f,
         }
     }
 }
@@ -27,6 +29,7 @@ impl Attribute {
             fg: Color::WHITE,
             bg: Color::BLACK,
             fill: true,
+            layout_fn: |f| f,
         }
     }
 }

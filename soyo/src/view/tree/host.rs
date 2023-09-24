@@ -1,7 +1,5 @@
-use crate::{gfx::Context, view::Frame};
+use crate::view::tree::Visitor;
 
 pub trait Host {
-    fn render(&self, ctx: &mut Context);
-    fn layout(&mut self, attr: Frame) -> Frame;
-    fn tick(&mut self, delta: u64) -> bool;
+    fn accept_visitor<V: Visitor>(&mut self, v: &mut V);
 }
