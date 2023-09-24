@@ -2,7 +2,7 @@ use super::Symbol;
 use crate::{gfx::Rect, view::Frame};
 
 pub trait Render: 'static {
-    fn render(&self, rect: Rect, _z: i32) -> Vec<Symbol> {
+    fn render(&self, rect: Rect) -> Vec<Symbol> {
         rect.iter(false)
             .filter_map(|(x, y)| {
                 let mut sym = Symbol::new(rect.x + x, rect.y + y, '\0');

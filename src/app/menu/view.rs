@@ -1,7 +1,7 @@
 use crate::widget::Menu;
 use soyo::{
     gfx::Color,
-    view::{Compose, Frame, NodeList, Renderer},
+    view::{Compose, Frame, Host, Renderer, Visitor},
     widget::Label,
 };
 
@@ -12,12 +12,14 @@ pub struct View {
 }
 
 impl Compose for View {
-    fn register(&mut self, children: &mut NodeList) {
-        self.top.attr(|a| a.bg = Color::RED);
-        children.register_renderer(&self.top);
+    fn register(&mut self) {
+        self.top.attr.bg = Color::RED;
+        self.menu.attr.bg = Color::RED;
+    }
 
-        self.menu.attr(|a| a.bg = Color::RED);
-        children.register_renderer(&self.menu);
+    fn propagate<V: Visitor>(&mut self, v: &mut V) {
+        self.top.accept_visitor(v);
+        self.menu.accept_visitor(v);
     }
 
     fn layout(&mut self, frame: &mut Frame) {
@@ -39,14 +41,14 @@ impl View {
     where
         T: IntoIterator<Item = &'a str>,
     {
-        self.menu.set(move |w| w.set_list(iter));
+        self.menu.widget.set_list(iter);
     }
 
     pub fn set_item(&mut self, item: usize) {
-        self.menu.set(|w| w.set_item(item));
+        self.menu.widget.set_item(item);
     }
 
     pub fn write_top(&mut self, text: &str) {
-        self.top.set(|w| write!(w, "{}", text));
+        write!(self.top.widget, "{}", text);
     }
 }

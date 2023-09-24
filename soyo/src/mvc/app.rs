@@ -98,18 +98,18 @@ where
             ..
         } = self;
 
-        if let Some(event) = view.node().get(|view| model.dispatch(event, view)) {
+        if let Some(event) = model.dispatch(event, &view.node().widget) {
             dispatch.dispatch(event);
         }
     }
 
     fn update(&mut self) {
         let Self { model, view, .. } = self;
-        view.node_mut().set(|view| model.update(view));
+        model.update(&mut view.node_mut().widget);
     }
 
     fn trigger(&mut self, trigger: M::Trigger) {
         let Self { model, view, .. } = self;
-        view.node_mut().set(|view| model.trigger(view, trigger));
+        model.trigger(&mut view.node_mut().widget, trigger)
     }
 }

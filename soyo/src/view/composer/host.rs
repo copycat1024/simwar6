@@ -1,46 +1,42 @@
 use super::Compose;
-use crate::{
-    gfx::Context,
-    view::{Attribute, Frame, Host, NodeList},
-};
+use crate::view::{Attribute, Frame, Host, Visitor};
 
-pub struct ComposeHost<T: Compose> {
+pub struct Composer<T: Compose> {
     pub widget: T,
     pub attr: Attribute,
-    pub children: NodeList,
 }
 
-impl<T: Compose> ComposeHost<T> {
+impl<T: Compose> Composer<T> {
     pub fn new(mut widget: T) -> Self {
-        let mut children = NodeList::default();
-        widget.register(&mut children);
+        widget.register();
 
         Self {
             widget,
             attr: Attribute::default(),
-            children,
-        }
-    }
-}
-
-impl<T: Compose> Host for ComposeHost<T> {
-    fn render(&self, ctx: &mut Context) {
-        for node in self.children.list.iter() {
-            node.render(ctx);
         }
     }
 
-    fn layout(&mut self, frame: Frame) -> Frame {
+    pub fn layout(&mut self, frame: Frame) -> Frame {
         self.attr.frame = frame;
         self.widget.layout(&mut self.attr.frame);
         self.attr.frame
     }
 
-    fn tick(&mut self, delta: u64) -> bool {
-        let mut draw = self.widget.tick(delta);
-        for node in self.children.list.iter_mut() {
-            draw |= node.tick(delta);
-        }
-        draw
+    pub fn tick(&mut self, delta: u64) -> bool {
+        self.widget.tick(delta)
+    }
+}
+
+impl<T: Compose + Default> Default for Composer<T> {
+    fn default() -> Self {
+        Self::new(T::default())
+    }
+}
+
+impl<T: Compose> Host for Composer<T> {
+    fn accept_visitor<V: Visitor>(&mut self, v: &mut V) {
+        v.precompose(self);
+        self.widget.propagate(v);
+        v.postcompose(self);
     }
 }

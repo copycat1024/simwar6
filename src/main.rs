@@ -1,7 +1,5 @@
 mod app;
 mod launcher;
-mod simwar;
-mod usym;
 mod util;
 mod widget;
 

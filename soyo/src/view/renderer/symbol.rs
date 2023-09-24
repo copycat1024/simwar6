@@ -8,8 +8,8 @@ pub struct Symbol {
     pub y: i32,
     pub z: Option<i32>,
     pub c: char,
-    pub bg: Option<Color>,
     pub fg: Option<Color>,
+    pub bg: Option<Color>,
 }
 
 impl Symbol {
@@ -19,18 +19,58 @@ impl Symbol {
             y,
             z: None,
             c,
-            bg: None,
             fg: None,
+            bg: None,
+        }
+    }
+
+    pub fn set_z(self, z: i32) -> Self {
+        let Self {
+            x, y, c, fg, bg, ..
+        } = self;
+        Self {
+            x,
+            y,
+            z: Some(z),
+            c,
+            bg,
+            fg,
+        }
+    }
+
+    pub fn set_fg(self, fg: Color) -> Self {
+        let Self { x, y, z, c, bg, .. } = self;
+        Self {
+            x,
+            y,
+            z,
+            c,
+            fg: Some(fg),
+            bg,
+        }
+    }
+
+    pub fn set_bg(self, bg: Color) -> Self {
+        let Self { x, y, z, c, fg, .. } = self;
+        Self {
+            x,
+            y,
+            z,
+            c,
+            fg,
+            bg: Some(bg),
         }
     }
 
     pub fn to_slot(self, attr: &Attribute) -> Slot {
         let Self { x, y, z, c, bg, fg } = self;
-        let z = z.unwrap_or(attr.frame.z_value());
-        let mut slot = Slot::new(x, y, z);
-        slot.letter.c = c;
-        slot.letter.bg = bg.unwrap_or(attr.bg);
-        slot.letter.fg = fg.unwrap_or(attr.fg);
-        slot
+        Slot {
+            x,
+            y,
+            z: z.unwrap_or(attr.frame.z_value()),
+            c,
+            bg: bg.unwrap_or(attr.bg),
+            fg: fg.unwrap_or(attr.fg),
+        }
     }
 }

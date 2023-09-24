@@ -69,13 +69,13 @@ impl Backend for Raito {
         let vertices = slots
             .iter()
             .map(|slot| {
-                let c = slot.letter.c;
+                let c = slot.c;
                 Cell::new(
                     slot.x as f32,
                     slot.y as f32,
                     slot.z as f32,
                     if (c as u32) > 0x1F && (c as u32) < 0x7F {
-                        slot.letter.c
+                        slot.c
                     } else {
                         '?'
                     } as u8,

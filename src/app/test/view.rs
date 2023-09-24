@@ -1,5 +1,5 @@
 use soyo::{
-    view::{Compose, Frame, NodeList, Renderer},
+    view::{Compose, Frame, Host, Renderer, Visitor},
     widget::Label,
 };
 
@@ -9,9 +9,12 @@ pub struct View {
 }
 
 impl Compose for View {
-    fn register(&mut self, children: &mut NodeList) {
-        children.register_renderer(&self.bullet);
-        self.bullet.set(|w| write!(w, "Test"));
+    fn register(&mut self) {
+        write!(self.bullet.widget, "Test");
+    }
+
+    fn propagate<V: Visitor>(&mut self, v: &mut V) {
+        self.bullet.accept_visitor(v);
     }
 
     fn layout(&mut self, frame: &mut Frame) {

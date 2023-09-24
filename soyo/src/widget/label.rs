@@ -44,7 +44,7 @@ impl Label {
 }
 
 impl Render for Label {
-    fn render(&self, rect: Rect, _z: i32) -> Vec<Symbol> {
+    fn render(&self, rect: Rect) -> Vec<Symbol> {
         let (x, xi, len) = self.align(rect);
 
         self.text

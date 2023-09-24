@@ -1,22 +1,22 @@
-use super::Flow;
+use super::{
+    visitor::{DrawVisitor, TickVisitor},
+    Flow,
+};
 use crate::{
     gfx::Context,
     util::Result,
-    view::{Compose, Composer, Frame, Node},
+    view::{Compose, Composer, Frame, Host},
 };
 
 pub struct View<T: Compose> {
-    root: Node,
     root_ref: Composer<T>,
     screen: Frame,
 }
 
 impl<T: 'static + Compose> View<T> {
     pub fn new(node: T) -> Self {
-        let (root, root_ref) = Node::root(node);
         Self {
-            root,
-            root_ref,
+            root_ref: Composer::new(node),
             screen: Frame::screen(0, 0),
         }
     }
@@ -28,13 +28,13 @@ impl<T: 'static + Compose> View<T> {
     }
 
     pub fn tick(&mut self, delta: u64, flow: &mut Flow) {
-        if self.root.tick(delta) {
-            flow.draw = true;
-        }
+        let mut visitor = TickVisitor::new(delta);
+        self.root_ref.accept_visitor(&mut visitor);
+        flow.draw = visitor.draw;
     }
 
     pub fn compose(&mut self) {
-        self.root.layout(self.screen);
+        self.root_ref.layout(self.screen);
     }
 
     pub fn draw(&mut self, ctx: &mut Context, flow: &mut Flow) -> Result {
@@ -44,7 +44,8 @@ impl<T: 'static + Compose> View<T> {
         }
 
         flow.draw = false;
-        self.root.render(ctx);
+        let mut visitor = DrawVisitor::new(ctx);
+        self.root_ref.accept_visitor(&mut visitor);
         ctx.draw()?;
 
         Ok(())
