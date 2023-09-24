@@ -1,8 +1,8 @@
 use super::{event::Event, view::View};
 use crate::launcher::APP_LIST;
 use soyo::{
-    mvc::{self, Flow},
     gfx::{self, Key},
+    mvc::{self, Flow},
 };
 
 #[derive(Default)]
@@ -46,7 +46,7 @@ impl<T: 'static> mvc::Model<T> for Model {
                 flow.exit(self.id + 1);
             }
             Self::Event::MenuNext => {
-                if self.id < APP_LIST.len() - 2 {
+                if self.id < APP_LIST.len() {
                     self.id += 1;
                     flow.draw = true;
                 }
@@ -73,7 +73,11 @@ impl<T: 'static> mvc::Model<T> for Model {
 
 impl Model {
     pub fn app_list(&self) -> Vec<&str> {
-        APP_LIST[1..].iter().map(|i| i.0).collect()
+        APP_LIST[1..]
+            .iter()
+            .map(|i| i.0)
+            .chain(["a", "b"].into_iter())
+            .collect()
     }
 
     pub fn item(&self) -> usize {

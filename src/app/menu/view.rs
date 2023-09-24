@@ -1,14 +1,14 @@
 use crate::widget::Menu;
 use soyo::{
     gfx::Color,
-    view::{Compose, Frame, Host, Renderer, Visitor},
+    view::{Compose, Composer, Frame, Host, Renderer, Visitor},
     widget::Label,
 };
 
 #[derive(Default)]
 pub struct View {
     top: Renderer<Label>,
-    menu: Renderer<Menu>,
+    menu: Composer<Menu>,
 }
 
 impl Compose for View {

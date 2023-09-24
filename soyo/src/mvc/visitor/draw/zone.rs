@@ -29,8 +29,9 @@ impl Zone {
             rect, map, attr, ..
         } = self;
         for symbol in symbols {
-            if rect.point_inside(symbol.x, symbol.y) {
-                map.insert((symbol.x, symbol.y), symbol.to_slot(attr));
+            let slot = symbol.to_slot(attr);
+            if rect.point_inside(slot.x, slot.y) {
+                map.insert((symbol.x, symbol.y), slot);
             }
         }
     }
@@ -53,7 +54,7 @@ pub struct ZoneIter {
 impl ZoneIter {
     pub fn new(zone: Zone) -> Self {
         Self {
-            iter: zone.rect.iter(true),
+            iter: zone.rect.iter(false),
             zone,
         }
     }
@@ -70,8 +71,8 @@ impl Iterator for ZoneIter {
                     return Some(slot);
                 }
             } else if zone.attr.fill {
-                let symbol = Symbol::new(x, y, ' ');
-                return Some(symbol.to_slot(&zone.attr));
+                let symbol = Symbol::new(x, y, ' ').to_slot(&zone.attr);
+                return Some(symbol);
             }
         }
         None

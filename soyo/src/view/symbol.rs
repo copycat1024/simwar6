@@ -62,13 +62,13 @@ impl Symbol {
         }
     }
 
-    pub fn to_slot(self, attr: &Attribute) -> Slot {
+    pub fn to_slot(&self, attr: &Attribute) -> Slot {
         let Self { x, y, z, c, bg, fg } = self;
         Slot {
-            x,
-            y,
+            x: x + attr.frame.x,
+            y: y + attr.frame.y,
             z: z.unwrap_or(attr.frame.z_value()),
-            c,
+            c: *c,
             bg: bg.unwrap_or(attr.bg),
             fg: fg.unwrap_or(attr.fg),
         }

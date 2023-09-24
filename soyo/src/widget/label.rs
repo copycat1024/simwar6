@@ -15,6 +15,15 @@ pub struct Label {
 }
 
 impl Label {
+    pub fn new<S>(text: &S) -> Self
+    where
+        S: ToOwned<Owned = String> + ?Sized,
+    {
+        let mut label = Self::default();
+        write!(label, "{}", text.to_owned());
+        label
+    }
+
     fn align(&self, pos: Rect) -> (i32, usize, usize) {
         let w = pos.w;
         let wi = self.len as i32;
@@ -52,7 +61,7 @@ impl Render for Label {
             .enumerate()
             .skip(xi)
             .take(len)
-            .map(|(i, c)| Symbol::new(x + i as i32, rect.y, c))
+            .map(|(i, c)| Symbol::new(x + i as i32, 0, c))
             .collect()
     }
 }

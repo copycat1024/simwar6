@@ -1,52 +1,53 @@
 use soyo::{
-    gfx::{Color, Rect},
-    util::FlexVec,
-    view::{Render, Symbol},
+    gfx::Color,
+    view::{Compose, Frame, Host, Renderer, Visitor},
+    widget::Label,
 };
 
+#[derive(Default)]
 pub struct Menu {
-    item: i32,
-    list: FlexVec<FlexVec<char>>,
+    item: usize,
+    list: Vec<Renderer<Label>>,
 }
 
 impl Menu {
-    fn align(&self, i: i32, pos: Rect) -> i32 {
-        let w1 = self.list[i].len();
-        let w2 = pos.w;
-        (w2 - w1) / 2
-    }
-
     pub fn set_list<'a, T>(&mut self, iter: T)
     where
         T: IntoIterator<Item = &'a str>,
     {
-        self.list = FlexVec::from_iter(
-            iter.into_iter().map(FlexVec::<char>::text),
-            FlexVec::new(' '),
-        );
+        self.list = iter
+            .into_iter()
+            .map(|t| {
+                let label = Label::new(t);
+                let mut label = Renderer::new(label);
+                label.attr.fg = Color::WHITE;
+                label.attr.bg = Color::BLACK;
+                label
+            })
+            .collect();
+        self.item = 0;
+        self.list[0].attr.bg = Color::BLUE;
     }
 
     pub fn set_item(&mut self, item: usize) {
-        self.item = item as i32;
+        self.list[self.item].attr.bg = Color::BLACK;
+        self.item = item;
+        self.list[self.item].attr.bg = Color::BLUE;
     }
 }
 
-impl Default for Menu {
-    fn default() -> Self {
-        Self {
-            item: 0,
-            list: FlexVec::new(FlexVec::new(' ')),
+impl Compose for Menu {
+    fn register(&mut self) {}
+
+    fn layout(&mut self, frame: &mut Frame) {
+        for (i, label) in self.list.iter_mut().enumerate() {
+            label.attr.frame = frame.set_y(frame.y + i as i32).set_h(1);
         }
     }
-}
 
-impl Render for Menu {
-    fn render_rel(&self, rect: Rect, letter: &mut Symbol) {
-        let text = &self.list[rect.y];
-
-        letter.c = text[rect.x - self.align(rect.y, rect)];
-        if rect.y == self.item {
-            letter.bg = Some(Color::BLUE)
-        };
+    fn propagate<V: Visitor>(&mut self, v: &mut V) {
+        for label in self.list.iter_mut() {
+            label.accept_visitor(v);
+        }
     }
 }
