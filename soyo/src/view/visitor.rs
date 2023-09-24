@@ -5,3 +5,7 @@ pub trait Visitor {
     fn precompose<C: Compose>(&mut self, _host: &mut Composer<C>) {}
     fn postcompose<C: Compose>(&mut self, _host: &mut Composer<C>) {}
 }
+
+pub trait Host {
+    fn accept_visitor<V: Visitor>(&mut self, v: &mut V);
+}

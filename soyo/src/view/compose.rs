@@ -1,5 +1,10 @@
-use super::Compose;
 use crate::view::{Attribute, Frame, Host, Visitor};
+
+pub trait Compose: 'static {
+    fn register(&mut self);
+    fn propagate<V: Visitor>(&mut self, v: &mut V);
+    fn layout(&mut self, _: &mut Frame) {}
+}
 
 pub struct Composer<T: Compose> {
     pub widget: T,
@@ -20,10 +25,6 @@ impl<T: Compose> Composer<T> {
         self.attr.frame = frame;
         self.widget.layout(&mut self.attr.frame);
         self.attr.frame
-    }
-
-    pub fn tick(&mut self, delta: u64) -> bool {
-        self.widget.tick(delta)
     }
 }
 
