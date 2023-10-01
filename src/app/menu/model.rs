@@ -10,12 +10,11 @@ pub struct Model {
     id: usize,
 }
 
-impl<T: 'static> mvc::Model<T> for Model {
+impl<I> mvc::Model<I, usize> for Model {
     type Event = Event;
     type View = View;
-    type Trigger = ();
 
-    fn new(_: &T) -> (Self, Self::View) {
+    fn new(_: &I) -> (Self, Self::View) {
         (Model::default(), View::default())
     }
 
@@ -37,31 +36,26 @@ impl<T: 'static> mvc::Model<T> for Model {
         }
     }
 
-    fn reduce(&mut self, event: Self::Event, flow: &mut Flow) -> Vec<Self::Trigger> {
+    fn reduce(&mut self, event: Self::Event, flow: &mut Flow) -> Option<usize> {
         match event {
-            Self::Event::Exit => {
-                flow.exit(usize::MAX);
-            }
-            Self::Event::StartApp => {
-                flow.exit(self.id + 1);
-            }
+            Self::Event::Exit => Some(usize::MAX),
+            Self::Event::StartApp => Some(self.id + 1),
             Self::Event::MenuNext => {
                 if self.id < APP_LIST.len() {
                     self.id += 1;
                     flow.draw = true;
                 }
+                None
             }
             Self::Event::MenuPrev => {
                 if self.id > 0 {
                     self.id -= 1;
                     flow.draw = true;
                 }
+                None
             }
-        };
-        Vec::new()
+        }
     }
-
-    fn trigger(&self, _view: &mut Self::View, _trigger: Self::Trigger) {}
 
     fn update(&self, view: &mut Self::View) {
         view.set_menu(self.app_list());
@@ -73,11 +67,7 @@ impl<T: 'static> mvc::Model<T> for Model {
 
 impl Model {
     pub fn app_list(&self) -> Vec<&str> {
-        APP_LIST[1..]
-            .iter()
-            .map(|i| i.0)
-            .chain(["a", "b"].into_iter())
-            .collect()
+        APP_LIST[1..].to_vec()
     }
 
     pub fn item(&self) -> usize {

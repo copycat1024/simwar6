@@ -10,10 +10,7 @@ use std::time::Duration;
 
 pub trait Backend: 'static {
     fn event(&mut self, event_period: Duration, update_period: Duration) -> Result<Option<Event>>;
-    fn print(&mut self, slots: &[Slot]) -> Result;
-    fn fg(&mut self, c: Color) -> Result;
-    fn bg(&mut self, c: Color) -> Result;
-    fn clear(&mut self, color: Color) -> Result;
-    fn flush(&mut self) -> Result;
+    fn push(&mut self, slots: &[Slot]);
+    fn draw(&mut self, color: Color) -> Result;
     fn size(&self) -> (i32, i32);
 }

@@ -21,10 +21,10 @@ impl<T: 'static + Compose> View<T> {
         }
     }
 
-    pub fn resize(&mut self, w: i32, h: i32, ctx: &mut Context, flow: &mut Flow) -> Result {
+    pub fn resize(&mut self, w: i32, h: i32, flow: &mut Flow) -> Result {
         flow.draw = true;
         self.screen = Frame::screen(w, h);
-        ctx.clear()
+        Ok(())
     }
 
     pub fn tick(&mut self, delta: u64, flow: &mut Flow) {
@@ -38,12 +38,8 @@ impl<T: 'static + Compose> View<T> {
     }
 
     pub fn draw(&mut self, ctx: &mut Context, flow: &mut Flow) -> Result {
-        if flow.clear {
-            flow.clear = false;
-            ctx.clear()?;
-        }
-
         flow.draw = false;
+
         let mut visitor = DrawVisitor::new(ctx);
         self.root_ref.accept_visitor(&mut visitor);
         ctx.draw()?;

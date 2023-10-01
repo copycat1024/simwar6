@@ -9,12 +9,16 @@ use raito::{
     },
     Builder, Context, TextureData,
 };
-use std::time::{Duration, Instant};
+use std::{
+    collections::HashMap,
+    time::{Duration, Instant},
+};
 
 pub struct Raito {
     ctx: Context,
     artist: CellBlit,
     last_update: Instant,
+    cache: HashMap<(Color, Color), Vec<Cell>>,
 }
 
 impl Raito {
@@ -32,6 +36,7 @@ impl Raito {
             ctx,
             artist,
             last_update: Instant::now(),
+            cache: HashMap::new(),
         }
     }
 }
@@ -64,47 +69,27 @@ impl Backend for Raito {
         Ok(event)
     }
 
-    fn print(&mut self, slots: &[Slot]) -> Result {
-        let vertices = slots
-            .iter()
-            .map(|slot| {
-                let c = slot.c;
-                Cell::new(
-                    slot.x as f32,
-                    slot.y as f32,
-                    slot.z as f32,
-                    if (c as u32) > 0x1F && (c as u32) < 0x7F {
-                        slot.c
-                    } else {
-                        '?'
-                    } as u8,
-                )
-            })
-            .collect();
-
-        self.artist.draw(vertices);
-
-        Ok(())
+    fn push(&mut self, slots: &[Slot]) {
+        for slot in slots {
+            let vert = self.cache.entry((slot.fg, slot.bg)).or_default();
+            vert.push(slot2cell(slot));
+        }
     }
 
-    fn fg(&mut self, color: Color) -> Result {
-        let (r, g, b) = color.rgb();
-        self.artist.fg(r, g, b);
-        Ok(())
-    }
-
-    fn bg(&mut self, color: Color) -> Result {
-        let (r, g, b) = color.rgb();
-        self.artist.bg(r, g, b);
-        Ok(())
-    }
-
-    fn clear(&mut self, _color: Color) -> Result {
+    fn draw(&mut self, _color: Color) -> Result {
         self.ctx.clear();
-        Ok(())
-    }
 
-    fn flush(&mut self) -> Result {
+        let cache = std::mem::take(&mut self.cache);
+        for ((fg, bg), vert) in cache.into_iter() {
+            let (r, g, b) = fg.rgb();
+            self.artist.fg(r, g, b);
+
+            let (r, g, b) = bg.rgb();
+            self.artist.bg(r, g, b);
+
+            self.artist.draw(vert);
+        }
+
         self.ctx.swap();
         Ok(())
     }
@@ -129,4 +114,17 @@ fn map_key(code: i32) -> Option<Key> {
             None
         }
     }
+}
+
+fn slot2cell(slot: &Slot) -> Cell {
+    Cell::new(
+        slot.x as f32,
+        slot.y as f32,
+        slot.z as f32,
+        if (slot.c as u32) > 0x1F && (slot.c as u32) < 0x7F {
+            slot.c
+        } else {
+            '?'
+        } as u8,
+    )
 }

@@ -1,18 +1,17 @@
 use super::{event::Event, view::View};
 use soyo::{
-    mvc::{self, Flow},
     gfx::{self, Key},
+    mvc::{self, Flow},
 };
 
 #[derive(Default)]
 pub struct Model {}
 
-impl<T: 'static> mvc::Model<T> for Model {
+impl<I> mvc::Model<I, usize> for Model {
     type Event = Event;
     type View = View;
-    type Trigger = ();
 
-    fn new(_: &T) -> (Self, Self::View) {
+    fn new(_: &I) -> (Self, Self::View) {
         (Model::default(), View::default())
     }
 
@@ -28,14 +27,11 @@ impl<T: 'static> mvc::Model<T> for Model {
         }
     }
 
-    fn reduce(&mut self, event: Self::Event, flow: &mut Flow) -> Vec<Self::Trigger> {
+    fn reduce(&mut self, event: Self::Event, _flow: &mut Flow) -> Option<usize> {
         match event {
-            Self::Event::Exit => flow.stop = true,
-        };
-        Vec::new()
+            Self::Event::Exit => Some(0),
+        }
     }
-
-    fn trigger(&self, _view: &mut Self::View, _trigger: Self::Trigger) {}
 
     fn update(&self, _view: &mut Self::View) {}
 }

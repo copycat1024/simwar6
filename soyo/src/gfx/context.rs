@@ -26,7 +26,6 @@ pub struct Context {
     backend: Box<dyn Backend>,
 
     // internal components
-    buffer: Vec<Slot>,
     config: Config,
 }
 
@@ -34,7 +33,6 @@ impl Context {
     pub fn new<B: Backend>(backend: B) -> Self {
         Self {
             backend: Box::new(backend),
-            buffer: Vec::new(),
             config: Config::default(),
         }
     }
@@ -52,35 +50,12 @@ impl Context {
     where
         I: IntoIterator<Item = Slot>,
     {
-        let iter = slots.into_iter().filter(|slot| slot.c != '\0');
-        self.buffer.extend(iter);
+        let slots: Vec<Slot> = slots.into_iter().filter(|slot| slot.c != '\0').collect();
+        self.backend.push(&slots);
     }
 
     pub fn draw(&mut self) -> Result {
-        let Self {
-            buffer, backend, ..
-        } = self;
-
-        for slot in buffer.iter() {
-            backend.bg(slot.bg)?;
-            backend.fg(slot.fg)?;
-            backend.print(&[slot.clone()])?;
-        }
-
-        backend.flush()
-    }
-
-    pub fn clear(&mut self) -> Result {
-        let Self {
-            buffer,
-            backend,
-            config,
-            ..
-        } = self;
-
-        buffer.clear();
-        backend.clear(config.clear_bg)?;
-        backend.flush()
+        self.backend.draw(self.config.clear_bg)
     }
 
     pub fn size(&self) -> (i32, i32) {

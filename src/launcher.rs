@@ -1,20 +1,23 @@
 use crate::app::{menu, test, ubmp};
 use soyo::{
-    mvc::{App, Instance, Launcher},
+    gfx::{backend::Raito, Context},
+    mvc::App,
     util::Result,
 };
 
-pub type Args = ();
-
-pub const APP_LIST: [(&str, Instance<Args>); 3] = [
-    ("Launcher", App::<_, menu::Model>::run),
-    ("Test app", App::<_, test::Model>::run),
-    ("Unicode plane 0", App::<_, ubmp::Model>::run),
-];
+pub const APP_LIST: [&str; 3] = ["Launcher", "Test app", "Unicode plane 0"];
 
 pub fn run() -> Result {
-    let launcher = Launcher::new(());
-    let app_list: Vec<Instance<_>> = APP_LIST.iter().map(|i| i.1).collect();
+    let raito = Raito::new();
+    let mut ctx = Context::new(raito);
+    let mut code = 0;
 
-    launcher.launch(&app_list)
+    loop {
+        code = match code {
+            0 => App::default().run::<(), usize, menu::Model>(&mut (), &mut ctx)?,
+            1 => App::default().run::<(), usize, test::Model>(&mut (), &mut ctx)?,
+            2 => App::default().run::<(), usize, ubmp::Model>(&mut (), &mut ctx)?,
+            _ => break Ok(()),
+        }
+    }
 }
