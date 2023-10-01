@@ -50,14 +50,14 @@ impl<I> mvc::Model<I, usize> for Model {
             Self::Event::Prev => {
                 if self.cell > 0 {
                     self.cell -= 1;
-                    flow.draw = true;
+                    flow.draw.set();
                 }
                 None
             }
             Self::Event::Next => {
                 if self.cell < 255 {
                     self.cell += 1;
-                    flow.draw = true;
+                    flow.draw.set();
                 }
                 None
             }

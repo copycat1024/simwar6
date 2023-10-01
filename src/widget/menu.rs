@@ -37,8 +37,6 @@ impl Menu {
 }
 
 impl Compose for Menu {
-    fn register(&mut self) {}
-
     fn layout(&mut self, frame: &mut Frame) {
         for (i, label) in self.list.iter_mut().enumerate() {
             label.attr.frame = frame.set_y(frame.y + i as i32).set_h(1);

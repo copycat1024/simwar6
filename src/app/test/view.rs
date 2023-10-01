@@ -3,21 +3,24 @@ use soyo::{
     widget::Label,
 };
 
-#[derive(Default)]
 pub struct View {
-    bullet: Renderer<Label>,
+    title: Renderer<Label>,
 }
 
 impl Compose for View {
-    fn register(&mut self) {
-        write!(self.bullet.widget, "Test");
-    }
-
     fn propagate<V: Visitor>(&mut self, v: &mut V) {
-        self.bullet.accept_visitor(v);
+        self.title.accept_visitor(v);
     }
 
     fn layout(&mut self, frame: &mut Frame) {
-        self.bullet.layout(frame.set_h(1));
+        self.title.layout(frame.set_h(1));
+    }
+}
+
+impl Default for View {
+    fn default() -> Self {
+        let mut title = Renderer::<Label>::default();
+        write!(title.widget, "Test");
+        Self { title }
     }
 }

@@ -1,7 +1,6 @@
 use crate::view::{Attribute, Frame, Host, Visitor};
 
 pub trait Compose: 'static {
-    fn register(&mut self);
     fn propagate<V: Visitor>(&mut self, v: &mut V);
     fn layout(&mut self, _: &mut Frame) {}
 }
@@ -12,9 +11,7 @@ pub struct Composer<T: Compose> {
 }
 
 impl<T: Compose> Composer<T> {
-    pub fn new(mut widget: T) -> Self {
-        widget.register();
-
+    pub fn new(widget: T) -> Self {
         Self {
             widget,
             attr: Attribute::default(),

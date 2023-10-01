@@ -10,9 +10,14 @@ pub struct View {
     table: Renderer<Utable>,
 }
 
-impl Compose for View {
-    fn register(&mut self) {}
+impl View {
+    pub fn set_cell(&mut self, cell: u8) {
+        write!(self.top.widget, "Cell {}", cell);
+        self.table.widget.set_cell(cell);
+    }
+}
 
+impl Compose for View {
     fn propagate<V: Visitor>(&mut self, v: &mut V) {
         self.top.accept_visitor(v);
         self.table.accept_visitor(v);
@@ -23,12 +28,5 @@ impl Compose for View {
 
         let (tw, th) = self.table.widget.get_wh();
         self.table.layout(frame.center(tw, th).rise_z());
-    }
-}
-
-impl View {
-    pub fn set_cell(&mut self, cell: u8) {
-        write!(self.top.widget, "Cell {}", cell);
-        self.table.widget.set_cell(cell);
     }
 }

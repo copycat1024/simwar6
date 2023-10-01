@@ -1,4 +1,7 @@
+use crate::util::Latch;
+
 #[derive(Default)]
 pub struct Flow {
-    pub draw: bool,
+    pub draw: Latch,
+    pub spawn: Latch,
 }

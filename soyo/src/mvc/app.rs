@@ -43,7 +43,12 @@ impl App {
                 }
             }
 
-            if self.flow.draw {
+            if self.flow.spawn.get() {
+                model.spawn(ctx)?;
+                self.flow.draw.set();
+            }
+
+            if self.flow.draw.get() {
                 // update view
                 model.update(&mut view.node_mut().widget);
 
@@ -51,7 +56,7 @@ impl App {
                 view.compose();
 
                 // draw
-                view.draw(ctx, &mut self.flow)?;
+                view.draw(ctx)?;
             }
         };
 
