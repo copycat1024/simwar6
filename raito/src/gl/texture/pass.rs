@@ -1,12 +1,12 @@
-use super::{Builder, FilterMode, WrapMode};
+use super::{Builder, FilterMode, Pixel, TextureData, WrapMode};
 use crate::gl::enums::{InternalFormat, PixelFormat, PixelType, TextureParameterName};
 
-pub struct Pass<'a, T: Default + Clone> {
-    builder: &'a mut Builder<T>,
+pub struct Pass<'a> {
+    builder: &'a mut Builder,
 }
 
-impl<'a, T: Default + Clone> Pass<'a, T> {
-    pub(super) fn new(builder: &'a mut Builder<T>) -> Self {
+impl<'a> Pass<'a> {
+    pub(super) fn new(builder: &'a mut Builder) -> Self {
         Self { builder }
     }
 
@@ -31,41 +31,23 @@ impl<'a, T: Default + Clone> Pass<'a, T> {
         self.set_parameter(TextureParameterName::TextureMinFilter, mode as u32)
     }
 
-    pub fn set(&mut self, x: usize, y: usize, item: T) {
-        let Builder { w, h, data, .. } = self.builder;
-
-        if x < *w && y < *h {
-            data[x + y * *w] = item;
-        }
-    }
-
-    pub(super) fn flush_to_gpu(&mut self) {
-        let Builder {
-            gl,
-            target,
-            w,
-            h,
-            data,
-            ..
-        } = self.builder;
+    pub(super) fn flush_to_gpu<T: Pixel>(&mut self, data: &TextureData<T>) {
+        let Builder { gl, target, .. } = self.builder;
 
         gl.tex_image2_d(
             *target,
             0,
             InternalFormat::R32f,
-            *w as i32,
-            *h as i32,
+            data.get_w() as i32,
+            data.get_h() as i32,
             0,
             PixelFormat::Red,
             PixelType::Float,
-            data.as_ptr().cast(),
+            data.ptr().cast(),
         );
     }
 }
 
-impl<'a, T> Drop for Pass<'a, T>
-where
-    T: Default + Clone,
-{
+impl<'a> Drop for Pass<'a> {
     fn drop(&mut self) {}
 }

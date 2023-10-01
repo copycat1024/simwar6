@@ -7,3 +7,4 @@ mod sdl;
 
 pub use builder::Builder;
 pub use context::{Context, Event};
+pub use gl::TextureData;

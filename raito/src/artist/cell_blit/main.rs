@@ -1,7 +1,7 @@
 use super::Cell;
 use crate::{
     gl::{
-        texture::{self, FilterMode, WrapMode},
+        texture::{self, FilterMode, TextureData, WrapMode},
         Gl, Program, Texture, Vao,
     },
     Context,
@@ -13,6 +13,7 @@ const FRAG: &str = include_str!("s_frag.glsl");
 
 const GLYPH_SIZE: (usize, usize) = (8, 16);
 const TABLE_SIZE: usize = 256;
+pub const TEXTURE_SIZE: (usize, usize) = (GLYPH_SIZE.0, GLYPH_SIZE.1 * TABLE_SIZE);
 
 pub struct CellBlit {
     program: Program,
@@ -22,26 +23,20 @@ pub struct CellBlit {
 }
 
 impl CellBlit {
-    pub fn new<F>(ctx: &Context, f: F) -> Self
-    where
-        F: FnOnce(&mut texture::Pass<f32>),
-    {
+    pub fn new(ctx: &Context, data: &TextureData<f32>) -> Self {
         let gl = ctx.gl().clone();
-        let texture =
-            texture::Builder::<f32>::rectangle(&gl, GLYPH_SIZE.0, GLYPH_SIZE.1 * TABLE_SIZE)
+
+        Self {
+            program: Program::new(&gl, VERT, FRAG, Some(GEOM)),
+            vao: Vao::new(&gl),
+            texture: texture::Builder::rectangle(&gl)
                 .config(|pass| {
                     pass.set_wrap_x(WrapMode::ClampToEdge);
                     pass.set_wrap_y(WrapMode::ClampToEdge);
                     pass.set_filter_mag(FilterMode::Nearest);
                     pass.set_filter_min(FilterMode::Nearest);
-
-                    f(pass);
-                });
-
-        Self {
-            program: Program::new(&gl, VERT, FRAG, Some(GEOM)),
-            vao: Vao::new(&gl),
-            texture: texture.build(),
+                })
+                .build(&data),
             gl,
         }
     }

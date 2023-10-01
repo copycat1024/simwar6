@@ -11,10 +11,7 @@ pub struct Texture {
 }
 
 impl Texture {
-    pub(super) fn new<T>(builder: Builder<T>) -> Self
-    where
-        T: Default + Clone,
-    {
+    pub(super) fn new(builder: Builder) -> Self {
         let Builder { id, gl, target, .. } = builder;
 
         Self { id, gl, target }

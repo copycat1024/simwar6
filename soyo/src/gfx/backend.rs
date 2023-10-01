@@ -1,5 +1,4 @@
 mod raito;
-mod render;
 
 pub use self::raito::Raito;
 

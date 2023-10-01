@@ -1,11 +1,13 @@
-use super::render::Text;
 use crate::{
     gfx::{Backend, Color, Event, Key, Slot},
     util::Result,
 };
 use raito::{
-    artist::{cell_blit::Cell, CellBlit},
-    Builder, Context,
+    artist::{
+        cell_blit::{Cell, TEXTURE_SIZE},
+        CellBlit,
+    },
+    Builder, Context, TextureData,
 };
 use std::time::{Duration, Instant};
 
@@ -19,15 +21,12 @@ impl Raito {
     #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         let ctx = Builder::new("Test").build();
-        let text = Text::new(include_bytes!("ChivoMono-Light.otf"), 16.);
 
-        let artist = CellBlit::new(&ctx, |pass| {
-            for i in 0x20..0x7E_u32 {
-                let c = char::from_u32(i).unwrap();
-                let offset = i as usize * 16;
-                text.render(c, |x, y, c| pass.set(x, y + offset, c));
-            }
-        });
+        let data_u8 = include_bytes!("tex0.bin");
+        let data = TextureData::from_u8(data_u8, TEXTURE_SIZE.0, TEXTURE_SIZE.1)
+            .expect("Wrong texture size");
+
+        let artist = CellBlit::new(&ctx, &data);
 
         Self {
             ctx,
