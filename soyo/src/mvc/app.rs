@@ -1,4 +1,4 @@
-use super::{Flow, Model, View};
+use super::{Control, Flow, Model, View};
 use crate::{
     gfx::{Context, Event},
     util::Result,
@@ -10,11 +10,15 @@ pub struct App {
 }
 
 impl App {
-    pub fn run<I, O, M>(mut self, args: &mut I, ctx: &mut Context) -> Result<O>
+    pub fn run<C>(
+        mut self,
+        args: &mut <C::Model as Model>::Input,
+        ctx: &mut Context,
+    ) -> Result<<C::Model as Model>::Output>
     where
-        M: Model<I, O>,
+        C: Control,
     {
-        let (mut model, composer) = M::new(args);
+        let (mut control, mut model, composer) = C::new(args);
         let mut view = View::new(composer);
 
         // resize on init
@@ -36,21 +40,25 @@ impl App {
                     _ => {}
                 }
 
-                if let Some(event) = model.dispatch(event, &view.node().widget) {
-                    if let Some(output) = model.reduce(event, &mut self.flow) {
+                control.handle(event, &view.node().widget);
+                if let Some(event) = control.dispatch(event, &view.node().widget) {
+                    if let Some(output) = model.reduce(event) {
                         break 'main output;
                     }
                 }
             }
 
-            if self.flow.spawn.get() {
-                model.spawn(ctx)?;
-                self.flow.draw.set();
+            control.cache(&model, &mut self.flow);
+
+            if let Some(event) = control.spawn(&model, ctx)? {
+                if let Some(output) = model.reduce(event) {
+                    break 'main output;
+                }
             }
 
             if self.flow.draw.get() {
                 // update view
-                model.update(&mut view.node_mut().widget);
+                control.update(&mut view.node_mut().widget);
 
                 // compose view
                 view.compose();

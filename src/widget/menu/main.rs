@@ -11,9 +11,10 @@ pub struct Menu {
 }
 
 impl Menu {
-    pub fn set_list<'a, T>(&mut self, iter: T)
+    pub fn set_list<'a, T, S>(&mut self, iter: T)
     where
-        T: IntoIterator<Item = &'a str>,
+        T: IntoIterator<Item = &'a S>,
+        S: AsRef<str> + 'a + ?Sized,
     {
         self.list = iter
             .into_iter()

@@ -17,12 +17,13 @@ impl Texture {
         Self { id, gl, target }
     }
 
-    pub fn bind(&mut self, unit: TextureUnit) {
+    pub fn bind(&mut self, unit: i32) {
+        let unit = Self::unit(unit);
         self.gl.active_texture(unit);
         self.gl.bind_texture(self.target, self.id);
     }
 
-    pub fn unit(id: i32) -> TextureUnit {
+    fn unit(id: i32) -> TextureUnit {
         match id {
             0 => TextureUnit::Texture0,
             1 => TextureUnit::Texture1,
@@ -34,5 +35,7 @@ impl Texture {
 }
 
 impl Drop for Texture {
-    fn drop(&mut self) {}
+    fn drop(&mut self) {
+        self.gl.delete_textures(1, &self.id)
+    }
 }

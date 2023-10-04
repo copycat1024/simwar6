@@ -7,21 +7,10 @@ use soyo::{
 
 pub struct View {
     top: Renderer<Label>,
-    menu: Composer<Menu>,
+    pub menu: Composer<Menu>,
 }
 
 impl View {
-    pub fn set_menu<'a, T>(&mut self, iter: T)
-    where
-        T: IntoIterator<Item = &'a str>,
-    {
-        self.menu.widget.set_list(iter);
-    }
-
-    pub fn set_item(&mut self, item: usize) {
-        self.menu.widget.set_item(item);
-    }
-
     pub fn write_top(&mut self, text: &str) {
         write!(self.top.widget, "{}", text);
     }

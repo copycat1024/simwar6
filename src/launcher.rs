@@ -10,6 +10,6 @@ pub fn run() -> Result {
     let mut ctx = Context::new(raito);
 
     App::default()
-        .run::<(), usize, menu::Model>(&mut (), &mut ctx)
+        .run::<menu::Control>(&mut (), &mut ctx)
         .map(|_| ())
 }

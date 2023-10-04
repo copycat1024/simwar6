@@ -1,18 +1,23 @@
-use super::{Builder, FilterMode, Pixel, TextureData, WrapMode};
-use crate::gl::enums::{InternalFormat, PixelFormat, PixelType, TextureParameterName};
+use super::{FilterMode, Pixel, TextureData, WrapMode};
+use crate::gl::{
+    enums::{InternalFormat, PixelFormat, PixelType, TextureParameterName, TextureTarget},
+    Gl,
+};
 
 pub struct Pass<'a> {
-    builder: &'a mut Builder,
+    gl: &'a Gl,
+    target: &'a mut TextureTarget,
 }
 
 impl<'a> Pass<'a> {
-    pub(super) fn new(builder: &'a mut Builder) -> Self {
-        Self { builder }
+    pub(super) fn new(gl: &'a Gl, target: &'a mut TextureTarget, id: u32) -> Self {
+        gl.bind_texture(*target, id);
+        Self { gl, target }
     }
 
     pub fn set_parameter(&mut self, name: TextureParameterName, value: u32) {
-        let Builder { gl, target, .. } = self.builder;
-        gl.tex_parameteri(*target, name, value as i32);
+        let Self { gl, target } = self;
+        gl.tex_parameteri(**target, name, value as i32);
     }
 
     pub fn set_wrap_x(&mut self, mode: WrapMode) {
@@ -31,11 +36,11 @@ impl<'a> Pass<'a> {
         self.set_parameter(TextureParameterName::TextureMinFilter, mode as u32)
     }
 
-    pub(super) fn flush_to_gpu<T: Pixel>(&mut self, data: &TextureData<T>) {
-        let Builder { gl, target, .. } = self.builder;
+    pub(super) fn set_data<T: Pixel>(&mut self, data: &TextureData<T>) {
+        let Self { gl, target } = self;
 
         gl.tex_image2_d(
-            *target,
+            **target,
             0,
             InternalFormat::R32f,
             data.get_w() as i32,

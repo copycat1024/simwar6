@@ -29,14 +29,7 @@ impl CellBlit {
         Self {
             program: Program::new(&gl, VERT, FRAG, Some(GEOM)),
             vao: Vao::new(&gl),
-            texture: texture::Builder::rectangle(&gl)
-                .config(|pass| {
-                    pass.set_wrap_x(WrapMode::ClampToEdge);
-                    pass.set_wrap_y(WrapMode::ClampToEdge);
-                    pass.set_filter_mag(FilterMode::Nearest);
-                    pass.set_filter_min(FilterMode::Nearest);
-                })
-                .build(&data),
+            texture: Self::new_texture(&gl, data),
             gl,
         }
     }
@@ -65,5 +58,21 @@ impl CellBlit {
 
     pub fn bg(&mut self, r: f32, g: f32, b: f32) {
         self.program.pass().set_3f("bg", r, g, b);
+    }
+
+    pub fn set_data(&mut self, data: &TextureData<f32>) {
+        let Self { texture, gl, .. } = self;
+        *texture = Self::new_texture(gl, data);
+    }
+
+    fn new_texture(gl: &Gl, data: &TextureData<f32>) -> Texture {
+        texture::Builder::rectangle(gl)
+            .config(|pass| {
+                pass.set_wrap_x(WrapMode::ClampToEdge);
+                pass.set_wrap_y(WrapMode::ClampToEdge);
+                pass.set_filter_mag(FilterMode::Nearest);
+                pass.set_filter_min(FilterMode::Nearest);
+            })
+            .build(&data)
     }
 }

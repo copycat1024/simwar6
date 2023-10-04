@@ -1,37 +1,21 @@
-use super::{event::Event, view::View};
-use soyo::{
-    gfx::{self, Key},
-    mvc::{self, Flow},
-};
+use super::event::Event;
+use soyo::mvc;
 
 #[derive(Default)]
 pub struct Model {}
 
-impl<I> mvc::Model<I, usize> for Model {
+impl mvc::Model for Model {
     type Event = Event;
-    type View = View;
+    type Input = ();
+    type Output = usize;
 
-    fn new(_: &I) -> (Self, Self::View) {
-        (Model::default(), View::default())
+    fn new(_: &Self::Input) -> Self {
+        Model::default()
     }
 
-    fn dispatch(&self, event: gfx::Event, _view: &Self::View) -> Option<Self::Event> {
-        if let gfx::Event::Key { key } = event {
-            if key == Key::ESC {
-                Some(Event::Exit)
-            } else {
-                None
-            }
-        } else {
-            None
-        }
-    }
-
-    fn reduce(&mut self, event: Self::Event, _flow: &mut Flow) -> Option<usize> {
+    fn reduce(&mut self, event: Self::Event) -> Option<usize> {
         match event {
             Self::Event::Exit => Some(0),
         }
     }
-
-    fn update(&self, _view: &mut Self::View) {}
 }

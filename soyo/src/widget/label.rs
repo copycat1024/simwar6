@@ -17,10 +17,10 @@ pub struct Label {
 impl Label {
     pub fn new<S>(text: &S) -> Self
     where
-        S: ToOwned<Owned = String> + ?Sized,
+        S: AsRef<str> + ?Sized,
     {
         let mut label = Self::default();
-        write!(label, "{}", text.to_owned());
+        write!(label, "{}", text.as_ref().to_owned());
         label
     }
 

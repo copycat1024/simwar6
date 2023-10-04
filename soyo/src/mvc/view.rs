@@ -30,7 +30,7 @@ impl<T: 'static + Compose> View<T> {
     pub fn tick(&mut self, delta: u64, flow: &mut Flow) {
         let mut visitor = TickVisitor::new(delta);
         self.root_ref.accept_visitor(&mut visitor);
-        flow.draw.follow(visitor.draw);
+        flow.draw |= visitor.draw;
     }
 
     pub fn compose(&mut self) {

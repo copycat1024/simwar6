@@ -24,9 +24,7 @@ impl<'a> ProgramPass<'a> {
     }
 
     pub fn bind_texture(&mut self, name: &str, texture: &mut Texture) {
-        let unit = Texture::unit(self.texture);
-
-        texture.bind(unit);
+        texture.bind(self.texture);
         self.set_1i(name, self.texture);
         self.texture += 1;
     }

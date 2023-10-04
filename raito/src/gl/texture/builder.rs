@@ -1,8 +1,5 @@
 use super::{Pass, Pixel, Texture, TextureData};
-use crate::gl::{
-    enums::{TextureTarget, TextureUnit},
-    Gl,
-};
+use crate::gl::{enums::TextureTarget, Gl};
 
 pub struct Builder {
     pub(super) id: u32,
@@ -28,17 +25,14 @@ impl Builder {
         F: FnOnce(&mut Pass),
     {
         {
-            self.gl.active_texture(TextureUnit::Texture0);
-            self.gl.bind_texture(self.target, self.id);
-
-            let mut pass = Pass::new(&mut self);
+            let mut pass = Pass::new(&self.gl, &mut self.target, self.id);
             f(&mut pass);
         }
         self
     }
 
     pub fn build<T: Pixel>(mut self, data: &TextureData<T>) -> Texture {
-        self = self.config(|pass| pass.flush_to_gpu(data));
+        self = self.config(|pass| pass.set_data(data));
         Texture::new(self)
     }
 }
