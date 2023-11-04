@@ -1,15 +1,17 @@
 mod builder;
 mod data;
-mod filter;
+#[allow(dead_code)]
+mod enums;
+mod handle;
 mod main;
 mod pass;
 mod pixel;
-mod wrap;
 
 pub use builder::Builder;
 pub use data::TextureData;
-pub use filter::FilterMode;
+pub use enums::{FilterMode, WrapMode};
 pub use main::Texture;
-pub use pass::Pass;
 pub use pixel::Pixel;
-pub use wrap::WrapMode;
+
+use handle::Handle;
+use pass::Pass;

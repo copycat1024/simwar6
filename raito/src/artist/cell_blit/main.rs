@@ -18,7 +18,7 @@ pub const TEXTURE_SIZE: (usize, usize) = (GLYPH_SIZE.0, GLYPH_SIZE.1 * TABLE_SIZ
 pub struct CellBlit {
     program: Program,
     vao: Vao<Cell>,
-    texture: Texture,
+    texture: Texture<f32>,
     gl: Gl,
 }
 
@@ -65,7 +65,7 @@ impl CellBlit {
         *texture = Self::new_texture(gl, data);
     }
 
-    fn new_texture(gl: &Gl, data: &TextureData<f32>) -> Texture {
+    fn new_texture(gl: &Gl, data: &TextureData<f32>) -> Texture<f32> {
         texture::Builder::rectangle(gl)
             .config(|pass| {
                 pass.set_wrap_x(WrapMode::ClampToEdge);

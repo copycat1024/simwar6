@@ -24,8 +24,8 @@ impl<'a> Builder<'a> {
             win_pos: (window::POS_CENTERED, window::POS_CENTERED, 800, 640),
             win_flag: window::SHOWN | window::OPENGL,
 
-            gl_major: 3,
-            gl_minor: 3,
+            gl_major: 4,
+            gl_minor: 6,
             gl_profile: gl::PROFILE_CORE,
         }
     }

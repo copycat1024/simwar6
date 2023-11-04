@@ -1,18 +1,14 @@
-use super::{Pass, Pixel, Texture, TextureData};
+use super::{handle::Handle, Pass, Pixel, Texture, TextureData};
 use crate::gl::{enums::TextureTarget, Gl};
 
-pub struct Builder {
-    pub(super) id: u32,
-    pub(super) gl: Gl,
-    pub(super) target: TextureTarget,
+pub struct Builder<T: Pixel> {
+    handle: Handle<T>,
 }
 
-impl Builder {
+impl<T: Pixel> Builder<T> {
     pub fn new(gl: &Gl, target: TextureTarget) -> Self {
         Self {
-            id: gl.new_texture(),
-            gl: gl.clone(),
-            target,
+            handle: Handle::new(gl, target),
         }
     }
 
@@ -22,17 +18,17 @@ impl Builder {
 
     pub fn config<F>(mut self, f: F) -> Self
     where
-        F: FnOnce(&mut Pass),
+        F: FnOnce(&mut Pass<T>),
     {
         {
-            let mut pass = Pass::new(&self.gl, &mut self.target, self.id);
+            let mut pass = Pass::new(&mut self.handle);
             f(&mut pass);
         }
         self
     }
 
-    pub fn build<T: Pixel>(mut self, data: &TextureData<T>) -> Texture {
+    pub fn build(mut self, data: &TextureData<T>) -> Texture<T> {
         self = self.config(|pass| pass.set_data(data));
-        Texture::new(self)
+        Texture::new(self.handle)
     }
 }
