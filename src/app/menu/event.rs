@@ -2,5 +2,4 @@
 pub enum Event {
     Exit,
     StartApp(usize),
-    EndApp,
 }

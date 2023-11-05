@@ -7,7 +7,7 @@ use std::panic::{set_hook, PanicInfo};
 
 fn main() {
     set_hook(Box::new(panic_hook));
-    launcher::run().expect("Error");
+    launcher::run();
 }
 
 fn panic_hook(info: &PanicInfo<'_>) {

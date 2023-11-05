@@ -22,10 +22,6 @@ impl mvc::Model for Model {
                 self.id = Some(id);
                 None
             }
-            Self::Event::EndApp => {
-                self.id = None;
-                None
-            }
         }
     }
 }

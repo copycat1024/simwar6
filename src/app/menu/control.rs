@@ -1,12 +1,8 @@
 use super::{Event, Model, View};
-use crate::{
-    app::{test, ubmp},
-    widget::MenuCtrl,
-};
+use crate::widget::MenuCtrl;
 use soyo::{
-    gfx::{self, Context, Key},
-    mvc::{self, App, Flow},
-    util::Result,
+    gfx::{self, Key},
+    mvc::{self, Flow},
 };
 
 pub const APP_LIST: [&str; 2] = ["Test app", "Unicode plane 0"];
@@ -57,25 +53,6 @@ impl mvc::Control for Control {
 
         flow.draw |= self.menu.hot();
         flow.draw |= model.id.is_some();
-    }
-
-    fn spawn(
-        &self,
-        model: &Self::Model,
-        ctx: &mut Context,
-    ) -> Result<Option<<Self::Model as mvc::Model>::Event>> {
-        if let Some(id) = model.id {
-            match id {
-                0 => {
-                    App::default().run::<test::Control>(&mut (), ctx)?;
-                }
-                1 => {
-                    App::default().run::<ubmp::Control>(&mut (), ctx)?;
-                }
-                _ => {}
-            }
-        }
-        Ok(Some(<Self::Model as mvc::Model>::Event::EndApp))
     }
 
     fn update(&self, view: &mut Self::View) {

@@ -3,53 +3,62 @@ use super::{
     Flow,
 };
 use crate::{
-    gfx::Context,
-    util::Result,
+    gfx::{Context, Event},
     view::{Compose, Composer, Frame, Host},
 };
 
 pub struct View<T: Compose> {
-    root_ref: Composer<T>,
+    root: Composer<T>,
     screen: Frame,
 }
 
 impl<T: 'static + Compose> View<T> {
     pub fn new(node: T) -> Self {
         Self {
-            root_ref: Composer::new(node),
+            root: Composer::new(node),
             screen: Frame::screen(0, 0),
         }
     }
 
-    pub fn resize(&mut self, w: i32, h: i32, flow: &mut Flow) -> Result {
-        flow.draw.set();
-        self.screen = Frame::screen(w, h);
-        Ok(())
+    pub fn handle_event(&mut self, event: Event, flow: &mut Flow) {
+        match event {
+            Event::Resize { w, h } => {
+                self.resize(w, h, flow);
+            }
+            Event::Update { delta } => {
+                let delta = delta.as_millis() as u64;
+                self.tick(delta, flow);
+            }
+            _ => {}
+        }
     }
 
-    pub fn tick(&mut self, delta: u64, flow: &mut Flow) {
+    pub fn resize(&mut self, w: i32, h: i32, flow: &mut Flow) {
+        flow.draw.set();
+        self.screen = Frame::screen(w, h);
+    }
+
+    fn tick(&mut self, delta: u64, flow: &mut Flow) {
         let mut visitor = TickVisitor::new(delta);
-        self.root_ref.accept_visitor(&mut visitor);
+        self.root.accept_visitor(&mut visitor);
         flow.draw |= visitor.draw;
     }
 
     pub fn compose(&mut self) {
-        self.root_ref.layout(self.screen);
+        self.root.layout(self.screen);
     }
 
-    pub fn draw(&mut self, ctx: &mut Context) -> Result {
+    pub fn draw(&mut self, ctx: &mut Context) {
         let mut visitor = DrawVisitor::new(ctx);
-        self.root_ref.accept_visitor(&mut visitor);
-        ctx.draw()?;
-
-        Ok(())
+        self.root.accept_visitor(&mut visitor);
+        ctx.draw();
     }
 
     pub fn node(&self) -> &Composer<T> {
-        &self.root_ref
+        &self.root
     }
 
     pub fn node_mut(&mut self) -> &mut Composer<T> {
-        &mut self.root_ref
+        &mut self.root
     }
 }

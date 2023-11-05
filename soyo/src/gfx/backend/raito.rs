@@ -1,7 +1,4 @@
-use crate::{
-    gfx::{Backend, Color, Event, Key, Slot},
-    util::Result,
-};
+use crate::gfx::{Backend, Color, Event, Key, Slot};
 use raito::{
     artist::{
         cell_blit::{Cell, TEXTURE_SIZE},
@@ -42,10 +39,10 @@ impl Raito {
 }
 
 impl Backend for Raito {
-    fn event(&mut self, _event_period: Duration, update_period: Duration) -> Result<Option<Event>> {
+    fn event(&mut self, _event_period: Duration, update_period: Duration) -> Option<Event> {
         let Self { ctx, .. } = self;
 
-        let event = if let Some(event) = ctx.poll() {
+        if let Some(event) = ctx.poll() {
             match event {
                 raito::Event::Quit { .. } => Some(Event::Key { key: Key::ESC }),
                 raito::Event::Key {
@@ -64,9 +61,7 @@ impl Backend for Raito {
             } else {
                 None
             }
-        };
-
-        Ok(event)
+        }
     }
 
     fn push(&mut self, slots: &[Slot]) {
@@ -76,7 +71,7 @@ impl Backend for Raito {
         }
     }
 
-    fn draw(&mut self, _color: Color) -> Result {
+    fn draw(&mut self, _color: Color) {
         self.ctx.clear();
 
         let cache = std::mem::take(&mut self.cache);
@@ -91,7 +86,6 @@ impl Backend for Raito {
         }
 
         self.ctx.swap();
-        Ok(())
     }
 
     fn size(&self) -> (i32, i32) {

@@ -2,14 +2,11 @@ use crate::app::menu;
 use soyo::{
     gfx::{backend::Raito, Context},
     mvc::App,
-    util::Result,
 };
 
-pub fn run() -> Result {
+pub fn run() {
     let raito = Raito::new();
     let mut ctx = Context::new(raito);
 
-    App::default()
-        .run::<menu::Control>(&mut (), &mut ctx)
-        .map(|_| ())
+    App::run::<menu::Control>(&mut (), &mut ctx);
 }

@@ -1,7 +1,4 @@
-use crate::{
-    gfx::{backend::Backend, Color, Event, Slot},
-    util::Result,
-};
+use crate::gfx::{backend::Backend, Color, Event, Slot};
 use std::time::Duration;
 
 #[derive(Clone, Copy)]
@@ -37,7 +34,7 @@ impl Context {
         }
     }
 
-    pub fn event(&mut self) -> Result<Option<Event>> {
+    pub fn event(&mut self) -> Option<Event> {
         let Config {
             event_period,
             update_period,
@@ -54,8 +51,8 @@ impl Context {
         self.backend.push(&slots);
     }
 
-    pub fn draw(&mut self) -> Result {
-        self.backend.draw(self.config.clear_bg)
+    pub fn draw(&mut self) {
+        self.backend.draw(self.config.clear_bg);
     }
 
     pub fn size(&self) -> (i32, i32) {
