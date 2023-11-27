@@ -1,7 +1,7 @@
 use super::{Event, Model, View};
 use crate::widget::MenuCtrl;
 use soyo::{
-    gfx::{self, Key},
+    gfx::{self, Key, Slot},
     mvc::{self, Flow},
 };
 
@@ -13,6 +13,7 @@ pub struct Control {
 }
 
 impl mvc::Control for Control {
+    type Frag = Slot;
     type Model = Model;
     type View = View;
 

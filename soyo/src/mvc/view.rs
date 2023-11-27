@@ -7,12 +7,18 @@ use crate::{
     view::{Compose, Composer, Frame, Host},
 };
 
-pub struct View<T: Compose> {
+pub struct View<T>
+where
+    T: Compose,
+{
     root: Composer<T>,
     screen: Frame,
 }
 
-impl<T: 'static + Compose> View<T> {
+impl<T> View<T>
+where
+    T: Compose,
+{
     pub fn new(node: T) -> Self {
         Self {
             root: Composer::new(node),
@@ -48,7 +54,7 @@ impl<T: 'static + Compose> View<T> {
         self.root.layout(self.screen);
     }
 
-    pub fn draw(&mut self, ctx: &mut Context) {
+    pub fn draw(&mut self, ctx: &mut Context<T::Frag>) {
         let mut visitor = DrawVisitor::new(ctx);
         self.root.accept_visitor(&mut visitor);
         ctx.draw();

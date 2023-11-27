@@ -1,11 +1,12 @@
-use super::Symbol;
 use crate::{
-    gfx::Rect,
+    gfx::{Context, Fragment},
     view::{Attribute, Frame, Host, Visitor},
 };
 
 pub trait Render: 'static {
-    fn render(&self, rect: Rect) -> Vec<Symbol>;
+    type Frag: Fragment;
+
+    fn render(&self, attr: &Attribute) -> Vec<Self::Frag>;
 
     fn layout(&mut self, _: &mut Frame) {}
 
@@ -14,12 +15,18 @@ pub trait Render: 'static {
     }
 }
 
-pub struct Renderer<T: Render> {
+pub struct Renderer<T>
+where
+    T: Render,
+{
     pub widget: T,
     pub attr: Attribute,
 }
 
-impl<T: Render> Renderer<T> {
+impl<T> Renderer<T>
+where
+    T: Render,
+{
     pub fn new(widget: T) -> Self {
         Self {
             widget,
@@ -32,16 +39,28 @@ impl<T: Render> Renderer<T> {
         self.widget.layout(&mut self.attr.frame);
         self.attr.frame
     }
+
+    pub fn render(&self, ctx: &mut Context<T::Frag>) {
+        let Self { widget, attr, .. } = self;
+        let items = widget.render(attr);
+        ctx.render(items);
+    }
 }
 
-impl<T: Render + Default> Default for Renderer<T> {
+impl<T> Default for Renderer<T>
+where
+    T: Render + Default,
+{
     fn default() -> Self {
         Self::new(T::default())
     }
 }
 
-impl<T: Render> Host for Renderer<T> {
-    fn accept_visitor<V: Visitor>(&mut self, v: &mut V) {
+impl<T> Host<T::Frag> for Renderer<T>
+where
+    T: Render,
+{
+    fn accept_visitor<V: Visitor<T::Frag>>(&mut self, v: &mut V) {
         v.render(self);
     }
 }

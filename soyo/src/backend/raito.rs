@@ -38,7 +38,7 @@ impl Raito {
     }
 }
 
-impl Backend for Raito {
+impl Backend<Slot> for Raito {
     fn event(&mut self, _event_period: Duration, update_period: Duration) -> Option<Event> {
         let Self { ctx, .. } = self;
 

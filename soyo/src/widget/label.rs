@@ -1,7 +1,7 @@
 use crate::{
-    gfx::Rect,
+    gfx::{Rect, Slot},
     util::HAlign,
-    view::{Render, Symbol},
+    view::{Attribute, Render, Symbol},
 };
 use std::{
     cmp::min,
@@ -53,15 +53,17 @@ impl Label {
 }
 
 impl Render for Label {
-    fn render(&self, rect: Rect) -> Vec<Symbol> {
-        let (x, xi, len) = self.align(rect);
+    type Frag = Slot;
+
+    fn render(&self, attr: &Attribute) -> Vec<Slot> {
+        let (x, xi, len) = self.align(attr.frame.rect());
 
         self.text
             .chars()
             .enumerate()
             .skip(xi)
             .take(len)
-            .map(|(i, c)| Symbol::new(x + i as i32, 0, c))
+            .map(|(i, c)| Symbol::new(x + i as i32, 0, c).to_slot(attr))
             .collect()
     }
 }

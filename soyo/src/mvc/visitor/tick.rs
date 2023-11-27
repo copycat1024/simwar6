@@ -1,4 +1,7 @@
-use crate::view::{Render, Renderer, Visitor};
+use crate::{
+    gfx::Fragment,
+    view::{Render, Renderer, Visitor},
+};
 
 pub struct TickVisitor {
     delta: u64,
@@ -11,7 +14,10 @@ impl TickVisitor {
     }
 }
 
-impl Visitor for TickVisitor {
+impl<F> Visitor<F> for TickVisitor
+where
+    F: Fragment,
+{
     fn render<R: Render>(&mut self, host: &mut Renderer<R>) {
         let Renderer { widget, .. } = host;
         self.draw |= widget.tick(self.delta);

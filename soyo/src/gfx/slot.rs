@@ -1,5 +1,7 @@
 use crate::gfx::Color;
 
+use super::backend::Fragment;
+
 #[derive(Clone)]
 pub struct Slot {
     pub x: i32,
@@ -9,3 +11,5 @@ pub struct Slot {
     pub bg: Color,
     pub c: char,
 }
+
+impl Fragment for Slot {}

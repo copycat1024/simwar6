@@ -2,6 +2,7 @@
 #![feature(unsize)]
 #![warn(clippy::all)]
 
+pub mod backend;
 pub mod gfx;
 pub mod mvc;
 pub mod util;

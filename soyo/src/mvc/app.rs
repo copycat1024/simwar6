@@ -1,5 +1,5 @@
 use super::{Control, Flow, Model, View};
-use crate::gfx::Context;
+use crate::gfx::{Context, Fragment};
 
 #[derive(Default)]
 pub struct App {
@@ -7,12 +7,13 @@ pub struct App {
 }
 
 impl App {
-    pub fn run<C>(
+    pub fn run<C, F>(
         args: &mut <C::Model as Model>::Input,
-        ctx: &mut Context,
+        ctx: &mut Context<F>,
     ) -> <C::Model as Model>::Output
     where
-        C: Control,
+        C: Control<Frag = F>,
+        F: Fragment,
     {
         let mut app = App::default();
 

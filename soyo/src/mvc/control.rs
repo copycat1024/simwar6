@@ -1,9 +1,13 @@
 use super::{Flow, Model};
-use crate::{gfx, view::Compose};
+use crate::{
+    gfx::{self, Fragment},
+    view::Compose,
+};
 
 pub trait Control: Sized {
+    type Frag: Fragment;
     type Model: Model;
-    type View: Compose;
+    type View: Compose<Frag = Self::Frag>;
 
     fn new(args: &<Self::Model as Model>::Input) -> (Self, Self::Model, Self::View);
 

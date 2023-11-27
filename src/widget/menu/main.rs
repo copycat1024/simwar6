@@ -1,5 +1,5 @@
 use soyo::{
-    gfx::Color,
+    gfx::{Color, Slot},
     view::{Compose, Frame, Host, Renderer, Visitor},
     widget::Label,
 };
@@ -38,13 +38,15 @@ impl Menu {
 }
 
 impl Compose for Menu {
+    type Frag = Slot;
+
     fn layout(&mut self, frame: &mut Frame) {
         for (i, label) in self.list.iter_mut().enumerate() {
             label.attr.frame = frame.set_y(frame.y + i as i32).set_h(1);
         }
     }
 
-    fn propagate<V: Visitor>(&mut self, v: &mut V) {
+    fn propagate<V: Visitor<Self::Frag>>(&mut self, v: &mut V) {
         for label in self.list.iter_mut() {
             label.accept_visitor(v);
         }

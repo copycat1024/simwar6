@@ -1,6 +1,6 @@
 use crate::widget::Menu;
 use soyo::{
-    gfx::Color,
+    gfx::{Color, Slot},
     view::{Compose, Composer, Frame, Host, Renderer, Visitor},
     widget::Label,
 };
@@ -17,7 +17,9 @@ impl View {
 }
 
 impl Compose for View {
-    fn propagate<V: Visitor>(&mut self, v: &mut V) {
+    type Frag = Slot;
+
+    fn propagate<V: Visitor<Self::Frag>>(&mut self, v: &mut V) {
         self.top.accept_visitor(v);
         self.menu.accept_visitor(v);
     }

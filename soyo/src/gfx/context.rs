@@ -1,4 +1,4 @@
-use crate::gfx::{backend::Backend, Color, Event, Slot};
+use crate::gfx::{Backend, Color, Event, Fragment};
 use std::time::Duration;
 
 #[derive(Clone, Copy)]
@@ -18,16 +18,16 @@ impl Default for Config {
     }
 }
 
-pub struct Context {
+pub struct Context<F: Fragment> {
     // external components
-    backend: Box<dyn Backend>,
+    backend: Box<dyn Backend<F>>,
 
     // internal components
     config: Config,
 }
 
-impl Context {
-    pub fn new<B: Backend>(backend: B) -> Self {
+impl<F: Fragment> Context<F> {
+    pub fn new<B: Backend<F>>(backend: B) -> Self {
         Self {
             backend: Box::new(backend),
             config: Config::default(),
@@ -45,9 +45,9 @@ impl Context {
 
     pub fn render<I>(&mut self, slots: I)
     where
-        I: IntoIterator<Item = Slot>,
+        I: IntoIterator<Item = F>,
     {
-        let slots: Vec<Slot> = slots.into_iter().filter(|slot| slot.c != '\0').collect();
+        let slots: Vec<F> = slots.into_iter().collect();
         self.backend.push(&slots);
     }
 

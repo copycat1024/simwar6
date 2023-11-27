@@ -19,6 +19,7 @@ impl mvc::Model for Model {
         match event {
             Self::Event::Exit => Some(usize::MAX),
             Self::Event::StartApp(id) => {
+                println!("{id}");
                 self.id = Some(id);
                 None
             }
