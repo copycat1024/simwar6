@@ -1,7 +1,7 @@
 use soyo::{
     gfx::{Color, Slot},
     view::{Compose, Frame, Host, Renderer, Visitor},
-    widget::Label,
+    widget::{Label, ILabel},
 };
 
 #[derive(Default)]
@@ -19,8 +19,7 @@ impl Menu {
         self.list = iter
             .into_iter()
             .map(|t| {
-                let label = Label::new(t);
-                let mut label = Renderer::new(label);
+                let mut label = Renderer::from_str(t);
                 label.attr.fg = Color::WHITE;
                 label.attr.bg = Color::BLACK;
                 label

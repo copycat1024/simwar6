@@ -4,7 +4,7 @@ mod flex_vec;
 mod latch;
 mod shared_ptr;
 
-pub use align::HAlign;
+pub use align::{AlignOffset, AlignX};
 pub use error::{error, Error, Result};
 pub use flex_vec::FlexVec;
 pub use latch::Latch;

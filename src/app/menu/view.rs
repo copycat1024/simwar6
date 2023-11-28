@@ -2,7 +2,7 @@ use crate::widget::Menu;
 use soyo::{
     gfx::{Color, Slot},
     view::{Compose, Composer, Frame, Host, Renderer, Visitor},
-    widget::Label,
+    widget::{ILabel, Label},
 };
 
 pub struct View {
@@ -12,7 +12,7 @@ pub struct View {
 
 impl View {
     pub fn write_top(&mut self, text: &str) {
-        write!(self.top.widget, "{}", text);
+        write!(self.top, "{}", text);
     }
 }
 
