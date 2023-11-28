@@ -1,6 +1,9 @@
 use super::Builder;
 use crate::{
-    gl::{enums::ClearBufferMask, Gl, GlContext},
+    gl::{
+        enums::{ClearBufferMask, StringName},
+        Gl, GlContext,
+    },
     sdl::{self, gl::Attr, Sdl, Window},
 };
 
@@ -34,6 +37,7 @@ impl Context {
 
         let window = sdl.create_window(title, x, y, w, h, win_flag);
         let gl = GlContext::new(&window);
+        println!("{}", gl.gl().get_string(StringName::Version));
 
         Self { sdl, gl, window }
     }

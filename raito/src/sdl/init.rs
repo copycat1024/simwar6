@@ -1,1 +1,1 @@
-pub const VIDEO: u32 = 4;
+pub const VIDEO: u32 = 0x20;

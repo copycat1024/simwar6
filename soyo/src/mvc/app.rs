@@ -1,115 +1,64 @@
-use super::{Dispatch, Flow, Model, View};
-use crate::{
-    gfx::{Context, Event},
-    util::Result,
-};
+use super::{Control, Flow, Model, View};
+use crate::gfx::Backend;
 
-pub struct App<A, M>
-where
-    A: 'static,
-    M: Model<A>,
-{
-    flow: Flow,
-    dispatch: Dispatch<M::Event>,
-    trigger: Dispatch<M::Trigger>,
-    model: M,
-    view: View<M::View>,
+pub struct App<C: Control> {
+    ctrl: C,
+    model: C::Model,
+    view: View<C::View>,
 }
 
-impl<A, M> App<A, M>
-where
-    A: 'static,
-    M: Model<A>,
-{
-    pub fn new(args: &mut A) -> Self {
-        let (model, composer) = M::new(args);
-        Self {
-            dispatch: Dispatch::default(),
-            trigger: Dispatch::default(),
-            model,
-            view: View::new(composer),
-            flow: Flow::default(),
-        }
+impl<C: Control> App<C> {
+    pub fn new(args: &mut <C::Model as Model>::Input) -> Self {
+        let (ctrl, model, composer) = C::new(args);
+        let view = View::new(composer);
+
+        Self { ctrl, model, view }
     }
 
-    pub fn run(args: &mut A, ctx: &mut Context) -> Result<usize> {
-        let mut app = Self::new(args);
+    pub fn run<B>(self, backend: &mut B) -> <C::Model as Model>::Output
+    where
+        B: Backend<Frag = C::Frag>,
+    {
+        let Self {
+            mut ctrl,
+            mut model,
+            mut view,
+        } = self;
+        let mut flow = Flow::default();
 
         // resize on init
-        let (w, h) = ctx.size();
-        app.view.resize(w, h, ctx, &mut app.flow)?;
+        let (w, h) = backend.size();
+        view.resize(w, h, &mut flow);
 
         // main loop
         'main: loop {
             // handle native events
-            while let Some(event) = ctx.event()? {
-                match event {
-                    Event::Resize { w, h } => {
-                        app.view.resize(w, h, ctx, &mut app.flow)?;
-                    }
-                    Event::Update { delta } => {
-                        let delta = delta.as_millis() as u64;
-                        app.view.tick(delta, &mut app.flow);
-                    }
-                    _ => {}
-                }
 
-                app.dispatch(event);
-            }
+            while let Some(event) = backend.event() {
+                view.handle_event(event, &mut flow);
 
-            // handle domain event
-            while let Some(event) = app.dispatch.event() {
-                let trigger = app.model.reduce(event, &mut app.flow);
-                if app.flow.stop {
-                    break 'main;
-                }
-                for t in trigger {
-                    app.trigger.dispatch(t);
+                ctrl.handle(event, &view.node().widget);
+
+                if let Some(output) = ctrl
+                    .dispatch(event, &view.node().widget)
+                    .and_then(|e| model.reduce(e))
+                {
+                    break 'main output;
                 }
             }
 
-            while let Some(trigger) = app.trigger.event() {
-                app.trigger(trigger);
-            }
+            ctrl.cache(&model, &mut flow);
 
-            if app.flow.draw {
+            if flow.draw.get() {
                 // update view
-                app.update();
+                ctrl.update(&mut view.node_mut().widget);
 
                 // compose view
-                app.view.compose();
+                view.compose();
 
                 // draw
-                app.view.draw(ctx, &mut app.flow)?;
+                view.draw(backend);
             }
         }
-
-        // clean up app
-        ctx.clear()?;
-
-        Ok(app.flow.code)
-    }
-
-    fn dispatch(&mut self, event: Event) {
-        let Self {
-            view,
-            dispatch,
-            model,
-            ..
-        } = self;
-
-        if let Some(event) = model.dispatch(event, &view.node().widget) {
-            dispatch.dispatch(event);
-        }
-    }
-
-    fn update(&mut self) {
-        let Self { model, view, .. } = self;
-        model.update(&mut view.node_mut().widget);
-    }
-
-    fn trigger(&mut self, trigger: M::Trigger) {
-        let Self { model, view, .. } = self;
-        model.trigger(&mut view.node_mut().widget, trigger)
     }
 }

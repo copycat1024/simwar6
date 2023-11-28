@@ -13,7 +13,7 @@ impl LayoutVisitor {
 }
 
 impl Visitor for LayoutVisitor {
-    fn precompose<C: Compose>(&mut self, host: &mut Composer<C>) {
+    fn before_render<C: Compose>(&mut self, host: &mut Composer<C>) {
         let frame = *self.stack.last().expect("Empty stack in LayoutVisitor");
         let frame = host.layout(frame);
         self.stack.push(frame);
@@ -24,7 +24,7 @@ impl Visitor for LayoutVisitor {
         host.layout(frame);
     }
 
-    fn postcompose<C: Compose>(&mut self, _host: &mut Composer<C>) {
+    fn after_render<C: Compose>(&mut self, _host: &mut Composer<C>) {
         self.stack.pop();
     }
 }

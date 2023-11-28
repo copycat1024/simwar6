@@ -1,3 +1,3 @@
 mod label;
 
-pub use label::Label;
+pub use label::{ILabel, Label};

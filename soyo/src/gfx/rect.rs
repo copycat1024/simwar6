@@ -61,6 +61,13 @@ impl Rect {
     }
 }
 
+impl std::fmt::Debug for Rect {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { x, y, w, h } = self;
+        write!(f, "Rect(x:{}, y:{}, w:{}, h:{})", x, y, w, h)
+    }
+}
+
 pub struct RectIter {
     src: Rect,
     abs: bool,

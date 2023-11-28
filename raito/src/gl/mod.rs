@@ -1,13 +1,13 @@
 mod context;
-mod gen;
+mod ffi;
 mod main;
 mod pipeline;
 pub mod texture;
 mod vertex;
 
 pub use context::GlContext;
-pub use gen::{consts, enums, GlCmd};
+pub use ffi::{consts, enums, GlCmd};
 pub use main::Gl;
 pub use pipeline::{Program, Shader};
-pub use texture::Texture;
+pub use texture::{Pixel, Texture, TextureData};
 pub use vertex::{Vao, VaoPass, Vbo, Vertex, VertexAttr};

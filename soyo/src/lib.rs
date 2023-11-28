@@ -4,6 +4,7 @@
 
 pub mod gfx;
 pub mod mvc;
+pub mod raito;
 pub mod util;
 pub mod view;
 pub mod widget;

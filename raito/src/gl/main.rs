@@ -1,5 +1,10 @@
-use std::{ffi::CString, ops::Deref, rc::Rc};
+use std::{
+    ffi::{CStr, CString},
+    ops::Deref,
+    rc::Rc,
+};
 
+use super::enums;
 pub use super::{
     enums::{GetPName, ProgramPropertyARB, ShaderParameterName},
     GlCmd,
@@ -55,6 +60,12 @@ impl Gl {
         let mut size: [i32; 4] = [0; 4];
         self.cmd.get_integerv(GetPName::Viewport, size.as_mut_ptr());
         (size[2], size[3])
+    }
+
+    pub fn get_string(&self, name: enums::StringName) -> String {
+        let ptr = self.cmd.get_string(name);
+        let str = unsafe { CStr::from_ptr(ptr as *const i8) };
+        str.to_str().expect("GL string must be utf-8").to_owned()
     }
 }
 

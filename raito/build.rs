@@ -7,5 +7,4 @@ fn main() {
 
     println!("cargo:rustc-link-search={}", pwd.to_str().unwrap());
     println!("cargo:rustc-link-lib=sdl2");
-    println!("cargo:rerun-if-changed=wrapper.h");
 }

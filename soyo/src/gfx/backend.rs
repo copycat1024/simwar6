@@ -1,20 +1,14 @@
-mod raito;
-mod render;
+use crate::gfx::Event;
 
-pub use self::raito::Raito;
-
-use crate::{
-    gfx::{Color, Event, Slot},
-    util::Result,
-};
-use std::time::Duration;
+pub trait Fragment: 'static {}
 
 pub trait Backend: 'static {
-    fn event(&mut self, event_period: Duration, update_period: Duration) -> Result<Option<Event>>;
-    fn print(&mut self, slots: &[Slot]) -> Result;
-    fn fg(&mut self, c: Color) -> Result;
-    fn bg(&mut self, c: Color) -> Result;
-    fn clear(&mut self, color: Color) -> Result;
-    fn flush(&mut self) -> Result;
+    type Frag: Fragment;
+
+    fn event(&mut self) -> Option<Event>;
+    fn push<I>(&mut self, slots: I)
+    where
+        I: IntoIterator<Item = Self::Frag>;
+    fn draw(&mut self);
     fn size(&self) -> (i32, i32);
 }

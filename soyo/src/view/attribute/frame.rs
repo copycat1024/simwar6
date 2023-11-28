@@ -109,3 +109,15 @@ impl Frame {
         self.z
     }
 }
+
+impl std::fmt::Debug for Frame {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Frame")
+            .field("x", &self.x)
+            .field("y", &self.y)
+            .field("z", &self.z)
+            .field("w", &self.w)
+            .field("h", &self.h)
+            .finish()
+    }
+}

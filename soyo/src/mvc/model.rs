@@ -1,14 +1,10 @@
-use super::Flow;
-use crate::{gfx, view::Compose};
 
-pub trait Model<Args>: 'static + Sized {
+
+pub trait Model: 'static + Sized {
     type Event: 'static + Copy;
-    type Trigger: 'static;
-    type View: Compose;
+    type Input;
+    type Output;
 
-    fn new(args: &Args) -> (Self, Self::View);
-    fn dispatch(&self, _event: gfx::Event, _view: &Self::View) -> Option<Self::Event>;
-    fn reduce(&mut self, _event: Self::Event, _flow: &mut Flow) -> Vec<Self::Trigger>;
-    fn trigger(&self, _view: &mut Self::View, trigger: Self::Trigger);
-    fn update(&self, _view: &mut Self::View);
+    fn new(input: &Self::Input) -> Self;
+    fn reduce(&mut self, event: Self::Event) -> Option<Self::Output>;
 }

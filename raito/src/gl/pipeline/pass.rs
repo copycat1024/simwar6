@@ -1,5 +1,5 @@
 use super::Program;
-use crate::gl::{enums::PrimitiveType, Gl, Texture, Vao, Vertex};
+use crate::gl::{enums::PrimitiveType, Gl, Pixel, Texture, Vao, Vertex};
 
 pub struct ProgramPass<'a> {
     program: &'a mut Program,
@@ -23,10 +23,8 @@ impl<'a> ProgramPass<'a> {
         self.gl.draw_arrays(PrimitiveType::Points, 0, size);
     }
 
-    pub fn bind_texture(&mut self, name: &str, texture: &mut Texture) {
-        let unit = Texture::unit(self.texture);
-
-        texture.bind(unit);
+    pub fn bind_texture<T: Pixel>(&mut self, name: &str, texture: &mut Texture<T>) {
+        texture.bind(self.texture);
         self.set_1i(name, self.texture);
         self.texture += 1;
     }

@@ -1,41 +1,23 @@
-use super::Builder;
-use crate::gl::{
-    enums::{TextureTarget, TextureUnit},
-    Gl,
-};
+use crate::TextureData;
 
-pub struct Texture {
-    id: u32,
-    gl: Gl,
-    target: TextureTarget,
+use super::{Handle, Pass, Pixel};
+
+pub struct Texture<T: Pixel> {
+    handle: Handle<T>,
 }
 
-impl Texture {
-    pub(super) fn new<T>(builder: Builder<T>) -> Self
-    where
-        T: Default + Clone,
-    {
-        let Builder { id, gl, target, .. } = builder;
-
-        Self { id, gl, target }
+impl<T: Pixel> Texture<T> {
+    pub(super) fn new(handle: Handle<T>) -> Self {
+        Self { handle }
     }
 
-    pub fn bind(&mut self, unit: TextureUnit) {
-        self.gl.active_texture(unit);
-        self.gl.bind_texture(self.target, self.id);
+    pub fn bind(&mut self, unit: i32) {
+        self.handle.bind_unit(unit);
     }
 
-    pub fn unit(id: i32) -> TextureUnit {
-        match id {
-            0 => TextureUnit::Texture0,
-            1 => TextureUnit::Texture1,
-            2 => TextureUnit::Texture2,
-            3 => TextureUnit::Texture3,
-            _ => panic!("Too many texture binded"),
-        }
+    #[allow(dead_code)]
+    pub fn set_data(&mut self, data: &TextureData<T>) {
+        let mut pass = Pass::new(&mut self.handle);
+        pass.set_data(data);
     }
-}
-
-impl Drop for Texture {
-    fn drop(&mut self) {}
 }
