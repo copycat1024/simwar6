@@ -1,5 +1,5 @@
 use crate::{
-    gfx::{Context, Fragment},
+    gfx::{Backend, Fragment},
     view::{Attribute, Frame, Host, Visitor},
 };
 
@@ -40,10 +40,13 @@ where
         self.attr.frame
     }
 
-    pub fn render(&self, ctx: &mut Context<T::Frag>) {
+    pub fn render<B>(&self, ctx: &mut B)
+    where
+        B: Backend<Frag = T::Frag>,
+    {
         let Self { widget, attr, .. } = self;
         let items = widget.render(attr);
-        ctx.render(items);
+        ctx.push(items);
     }
 }
 

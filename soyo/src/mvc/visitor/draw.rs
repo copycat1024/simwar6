@@ -1,31 +1,31 @@
 use crate::{
-    gfx::{Context, Fragment},
+    gfx::Backend,
     view::{Render, Renderer, Visitor},
 };
 
-pub struct DrawVisitor<'a, F>
+pub struct DrawVisitor<'a, B>
 where
-    F: Fragment,
+    B: Backend,
 {
-    ctx: &'a mut Context<F>,
+    ctx: &'a mut B,
 }
 
-impl<'a, F> DrawVisitor<'a, F>
+impl<'a, B> DrawVisitor<'a, B>
 where
-    F: Fragment,
+    B: Backend,
 {
-    pub fn new(ctx: &'a mut Context<F>) -> Self {
+    pub fn new(ctx: &'a mut B) -> Self {
         Self { ctx }
     }
 }
 
-impl<'a, F> Visitor<F> for DrawVisitor<'a, F>
+impl<'a, B> Visitor<B::Frag> for DrawVisitor<'a, B>
 where
-    F: Fragment,
+    B: Backend,
 {
     fn render<R>(&mut self, host: &mut Renderer<R>)
     where
-        R: Render<Frag = F>,
+        R: Render<Frag = B::Frag>,
     {
         host.render(self.ctx);
     }

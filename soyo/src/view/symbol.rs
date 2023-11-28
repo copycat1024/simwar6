@@ -1,7 +1,4 @@
-use crate::{
-    gfx::{Color, Slot},
-    view::Attribute,
-};
+use crate::{gfx::Color, raito::Slot, view::Attribute};
 
 pub struct Symbol {
     pub x: i32,

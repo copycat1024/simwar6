@@ -1,39 +1,45 @@
 use super::{Control, Flow, Model, View};
-use crate::gfx::{Context, Fragment};
+use crate::gfx::Backend;
 
-#[derive(Default)]
-pub struct App {
-    flow: Flow,
+pub struct App<C: Control> {
+    ctrl: C,
+    model: C::Model,
+    view: View<C::View>,
 }
 
-impl App {
-    pub fn run<C, F>(
-        args: &mut <C::Model as Model>::Input,
-        ctx: &mut Context<F>,
-    ) -> <C::Model as Model>::Output
-    where
-        C: Control<Frag = F>,
-        F: Fragment,
-    {
-        let mut app = App::default();
+impl<C: Control> App<C> {
+    pub fn new(args: &mut <C::Model as Model>::Input) -> Self {
+        let (ctrl, model, composer) = C::new(args);
+        let view = View::new(composer);
 
-        let (mut control, mut model, composer) = C::new(args);
-        let mut view = View::new(composer);
+        Self { ctrl, model, view }
+    }
+
+    pub fn run<B>(self, backend: &mut B) -> <C::Model as Model>::Output
+    where
+        B: Backend<Frag = C::Frag>,
+    {
+        let Self {
+            mut ctrl,
+            mut model,
+            mut view,
+        } = self;
+        let mut flow = Flow::default();
 
         // resize on init
-        let (w, h) = ctx.size();
-        view.resize(w, h, &mut app.flow);
+        let (w, h) = backend.size();
+        view.resize(w, h, &mut flow);
 
         // main loop
         'main: loop {
             // handle native events
 
-            while let Some(event) = ctx.event() {
-                view.handle_event(event, &mut app.flow);
+            while let Some(event) = backend.event() {
+                view.handle_event(event, &mut flow);
 
-                control.handle(event, &view.node().widget);
+                ctrl.handle(event, &view.node().widget);
 
-                if let Some(output) = control
+                if let Some(output) = ctrl
                     .dispatch(event, &view.node().widget)
                     .and_then(|e| model.reduce(e))
                 {
@@ -41,17 +47,17 @@ impl App {
                 }
             }
 
-            control.cache(&model, &mut app.flow);
+            ctrl.cache(&model, &mut flow);
 
-            if app.flow.draw.get() {
+            if flow.draw.get() {
                 // update view
-                control.update(&mut view.node_mut().widget);
+                ctrl.update(&mut view.node_mut().widget);
 
                 // compose view
                 view.compose();
 
                 // draw
-                view.draw(ctx);
+                view.draw(backend);
             }
         }
     }

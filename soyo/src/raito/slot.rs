@@ -1,6 +1,4 @@
-use crate::gfx::Color;
-
-use super::backend::Fragment;
+use crate::gfx::{Color, Fragment};
 
 #[derive(Clone)]
 pub struct Slot {

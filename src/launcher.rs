@@ -1,13 +1,10 @@
 use crate::app::menu;
-use soyo::{
-    backend::Raito,
-    gfx::{Context, Slot},
-    mvc::App,
-};
+use soyo::{mvc::App, raito::Backend};
+use std::time::Duration;
 
 pub fn run() {
-    let raito = Raito::new();
-    let mut ctx = Context::new(raito);
+    let mut backend = Backend::new(Duration::from_millis(50));
 
-    App::run::<menu::Control, Slot>(&mut (), &mut ctx);
+    let app = App::<menu::Control>::new(&mut ());
+    app.run(&mut backend);
 }

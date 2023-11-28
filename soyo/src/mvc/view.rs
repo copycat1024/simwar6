@@ -3,7 +3,7 @@ use super::{
     Flow,
 };
 use crate::{
-    gfx::{Context, Event},
+    gfx::{Backend, Event},
     view::{Compose, Composer, Frame, Host},
 };
 
@@ -54,7 +54,10 @@ where
         self.root.layout(self.screen);
     }
 
-    pub fn draw(&mut self, ctx: &mut Context<T::Frag>) {
+    pub fn draw<B>(&mut self, ctx: &mut B)
+    where
+        B: Backend<Frag = T::Frag>,
+    {
         let mut visitor = DrawVisitor::new(ctx);
         self.root.accept_visitor(&mut visitor);
         ctx.draw();

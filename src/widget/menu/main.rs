@@ -1,7 +1,8 @@
 use soyo::{
-    gfx::{Color, Slot},
+    gfx::Color,
+    raito::Slot,
     view::{Compose, Frame, Host, Renderer, Visitor},
-    widget::{Label, ILabel},
+    widget::{ILabel, Label},
 };
 
 #[derive(Default)]

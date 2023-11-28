@@ -1,8 +1,9 @@
 use super::{Event, Model, View};
 use crate::widget::MenuCtrl;
 use soyo::{
-    gfx::{self, Key, Slot},
+    gfx::{self, Key},
     mvc::{self, Flow},
+    raito::Slot,
 };
 
 pub const APP_LIST: [&str; 2] = ["Test app", "Unicode plane 0"];

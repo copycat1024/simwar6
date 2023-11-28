@@ -1,5 +1,5 @@
 use crate::{
-    gfx::Slot,
+    raito::Slot,
     util::AlignX,
     view::{Attribute, Render, Symbol},
 };
