@@ -56,9 +56,6 @@ where
     }
 
     pub fn need_redraw(&self) -> bool {
-        if self.common.redraw.peek() {
-            println!("peek");
-        }
         self.common.redraw.get()
     }
 

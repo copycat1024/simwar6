@@ -1,47 +1,41 @@
-use super::{Event, Model, View};
-use crate::widget::MenuCtrl;
+use super::{Event, Model};
+use crate::screen::Menu;
 use soyo::{
     gfx::{self, Key},
     mvc,
     raito::Slot,
+    view::Widget,
 };
 
 pub const APP_LIST: [&str; 2] = ["Test app", "Unicode plane 0"];
 
 #[derive(Default)]
-pub struct Control {
-    menu: MenuCtrl,
-}
+pub struct Control {}
 
 impl mvc::Control for Control {
     type Frag = Slot;
     type Model = Model;
-    type View = View;
+    type View = Menu;
 
-    fn new(_: &<Self::Model as mvc::Model>::Input) -> (Self, Self::Model, Self::View) {
-        (Self::default(), Model::default(), View::default())
-    }
-
-    fn handle(&mut self, event: gfx::Event, _view: &Self::View) {
-        if let gfx::Event::Key { key } = event {
-            if key == Key::UP {
-                self.menu.item_up();
-            } else if key == Key::DOWN {
-                self.menu.item_down();
-            }
-        }
+    fn new(_: &<Self::Model as mvc::Model>::Input) -> (Self::Model, Self::View) {
+        (Model::default(), Menu::default())
     }
 
     fn dispatch(
-        &mut self,
         event: gfx::Event,
-        _view: &Self::View,
+        mut view: <Self::View as Widget>::Handle<'_>,
     ) -> Option<<Self::Model as mvc::Model>::Event> {
         if let gfx::Event::Key { key } = event {
-            if key == Key::ESC {
+            if key == Key::UP {
+                view.item_up();
+                None
+            } else if key == Key::DOWN {
+                view.item_down();
+                None
+            } else if key == Key::ESC {
                 Some(Event::Exit)
             } else if key == Key::ENTER {
-                Some(Event::StartApp(self.menu.item()))
+                Some(Event::StartApp(view.item()))
             } else {
                 None
             }
@@ -50,13 +44,8 @@ impl mvc::Control for Control {
         }
     }
 
-    fn cache(&mut self, _model: &Self::Model) {
-        self.menu.set_list(APP_LIST.iter());
-    }
-
-    fn update(&self, view: &mut Self::View) {
-        self.menu.update_widget(&mut view.menu.widget);
-
+    fn update(mut view: <Self::View as Widget>::Handle<'_>) {
+        view.set_list(APP_LIST.iter());
         view.write_top("Launcher");
     }
 }

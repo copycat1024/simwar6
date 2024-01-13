@@ -2,7 +2,7 @@ use super::visitor::{DrawVisitor, RedrawVisitor, TickVisitor};
 use crate::{
     gfx::{Backend, Event},
     util::Frame,
-    view::{Compose, Composer, Host},
+    view::{Compose, Composer, Host, Widget},
 };
 
 pub struct View<T>
@@ -56,8 +56,6 @@ where
         self.root.accept_visitor(&mut visitor);
 
         if visitor.redraw {
-            println!("redraw");
-
             // emit draw commands
             let mut visitor = DrawVisitor::new(ctx);
             self.root.accept_visitor(&mut visitor);
@@ -73,5 +71,9 @@ where
 
     pub fn node_mut(&mut self) -> &mut Composer<T> {
         &mut self.root
+    }
+
+    pub fn handle(&mut self) -> <T as Widget>::Handle<'_> {
+        self.root.handle()
     }
 }
