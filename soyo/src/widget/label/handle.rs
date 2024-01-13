@@ -37,17 +37,13 @@ impl<'a> Handle<'a> {
     }
 
     pub fn set_fg(&mut self, color: Color) {
-        if self.common.fg != color {
-            // self.common.set_redraw();
-            self.common.fg = color
-        }
+        let Self { common, widget } = self;
+        common.cmp_and_set(&mut widget.fg, color);
     }
 
     pub fn set_bg(&mut self, color: Color) {
-        if self.common.bg != color {
-            self.common.set_redraw();
-            self.common.bg = color
-        }
+        let Self { common, widget } = self;
+        common.cmp_and_set(&mut widget.bg, color);
     }
 
     pub fn text(&self) -> &str {

@@ -47,11 +47,9 @@ impl Compose for Menu {
 impl Default for Menu {
     fn default() -> Self {
         let mut top: Renderer<Label> = Renderer::default();
-        let mut handle = top.handle();
-        handle.set_bg(Color::RED);
+        top.handle().set_bg(Color::RED);
 
-        let mut list = Composer::default();
-        list.common.bg = Color::RED;
+        let list: Composer<ListView> = Composer::default();
 
         Self { top, list }
     }
