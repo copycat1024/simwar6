@@ -30,7 +30,6 @@ impl<C: Control> App<C> {
         // main loop
         'main: loop {
             // handle native events
-
             while let Some(event) = backend.event() {
                 view.handle_event(event);
 
@@ -41,7 +40,6 @@ impl<C: Control> App<C> {
                 }
             }
 
-            C::update(view.handle());
             view.draw(backend);
         }
     }

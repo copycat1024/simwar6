@@ -1,5 +1,5 @@
 use super::ListView;
-use soyo::view::{Common, HandleOf};
+use crate::view::{Common, HandleOf};
 
 pub struct Handle<'a> {
     widget: &'a mut ListView,
@@ -45,6 +45,7 @@ impl<'a> Handle<'a> {
         self.widget.item
     }
 
+    #[allow(clippy::len_without_is_empty)]
     pub fn len(&self) -> usize {
         self.widget.list.len()
     }

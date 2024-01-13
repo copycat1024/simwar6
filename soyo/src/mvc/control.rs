@@ -15,6 +15,4 @@ pub trait Control: Sized {
         event: gfx::Event,
         view: <Self::View as Widget>::Handle<'_>,
     ) -> Option<<Self::Model as Model>::Event>;
-
-    fn update(view: <Self::View as Widget>::Handle<'_>);
 }

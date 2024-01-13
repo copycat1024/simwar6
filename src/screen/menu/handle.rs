@@ -23,20 +23,7 @@ impl<'a> Handle<'a> {
         self.widget.list.handle().item_down();
     }
 
-    pub fn set_list<'b, T, S>(&mut self, list: T)
-    where
-        T: IntoIterator<Item = &'b S>,
-        S: AsRef<str> + 'b,
-    {
-        self.widget.list.handle().set_list(list)
-    }
-
     pub fn item(&mut self) -> usize {
         self.widget.list.handle().item()
-    }
-
-    pub fn write_top(&mut self, text: &str) {
-        let mut top = self.widget.top.handle();
-        write!(top, "{}", text);
     }
 }

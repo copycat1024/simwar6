@@ -7,8 +7,6 @@ use soyo::{
     view::Widget,
 };
 
-pub const APP_LIST: [&str; 2] = ["Test app", "Unicode plane 0"];
-
 #[derive(Default)]
 pub struct Control {}
 
@@ -42,10 +40,5 @@ impl mvc::Control for Control {
         } else {
             None
         }
-    }
-
-    fn update(mut view: <Self::View as Widget>::Handle<'_>) {
-        view.set_list(APP_LIST.iter());
-        view.write_top("Launcher");
     }
 }

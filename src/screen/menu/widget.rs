@@ -1,12 +1,13 @@
 use super::Handle;
-use crate::widget::ListView;
 use soyo::{
     gfx::Color,
     raito::Slot,
     util::Frame,
     view::{Compose, Composer, Host, Renderer, Visitor, Widget},
-    widget::Label,
+    widget::{Label, ListView},
 };
+
+pub const APP_LIST: [&str; 2] = ["Test app", "Unicode plane 0"];
 
 pub struct Menu {
     pub(super) top: Renderer<Label>,
@@ -29,6 +30,7 @@ impl Compose for Menu {
 
     fn compose(&mut self, frame: &mut Frame) {
         self.top.layout(frame.set_h(1).rise_z());
+        write!(self.top.handle(), "Launcher");
 
         self.list.compose(
             frame
@@ -38,6 +40,7 @@ impl Compose for Menu {
                 .set_h(frame.h - 11)
                 .rise_z(),
         );
+        self.list.handle().set_list(APP_LIST.iter());
     }
 }
 

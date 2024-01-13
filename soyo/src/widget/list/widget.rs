@@ -1,5 +1,5 @@
 use super::Handle;
-use soyo::{
+use crate::{
     gfx::Color,
     raito::Slot,
     util::Frame,
