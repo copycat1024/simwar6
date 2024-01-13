@@ -1,12 +1,13 @@
 use crate::{
     gfx::{Backend, Fragment},
-    view::{Attribute, Frame, Host, Visitor},
+    util::Frame,
+    view::{Common, Host, Visitor, Widget},
 };
 
-pub trait Render: 'static {
+pub trait Render: Widget {
     type Frag: Fragment;
 
-    fn render(&self, attr: &Attribute) -> Vec<Self::Frag>;
+    fn render(&self, common: &Common) -> Vec<Self::Frag>;
 
     fn layout(&mut self, _: &mut Frame) {}
 
@@ -19,8 +20,8 @@ pub struct Renderer<T>
 where
     T: Render,
 {
-    pub widget: T,
-    pub attr: Attribute,
+    widget: T,
+    common: Common,
 }
 
 impl<T> Renderer<T>
@@ -30,23 +31,43 @@ where
     pub fn new(widget: T) -> Self {
         Self {
             widget,
-            attr: Attribute::default(),
+            common: Common::default(),
         }
     }
 
+    pub fn handle(&mut self) -> T::Handle<'_> {
+        let Self { widget, common } = self;
+        widget.handle(common)
+    }
+
     pub fn layout(&mut self, frame: Frame) -> Frame {
-        self.attr.frame = (self.attr.layout_fn)(frame);
-        self.widget.layout(&mut self.attr.frame);
-        self.attr.frame
+        self.common.frame = (self.common.layout_fn)(frame);
+        self.widget.layout(&mut self.common.frame);
+        self.common.frame
     }
 
     pub fn render<B>(&self, ctx: &mut B)
     where
         B: Backend<Frag = T::Frag>,
     {
-        let Self { widget, attr, .. } = self;
-        let items = widget.render(attr);
+        let Self { widget, common, .. } = self;
+        let items = widget.render(common);
         ctx.push(items);
+    }
+
+    pub fn need_redraw(&self) -> bool {
+        if self.common.redraw.peek() {
+            println!("peek");
+        }
+        self.common.redraw.get()
+    }
+
+    pub fn tick(&mut self, delta: u64) -> bool {
+        self.widget.tick(delta)
+    }
+
+    pub fn set_frame(&mut self, frame: Frame) {
+        self.common.frame = frame;
     }
 }
 

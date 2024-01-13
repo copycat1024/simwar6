@@ -5,6 +5,12 @@ pub struct Latch {
 }
 
 impl Latch {
+    pub fn new(flag: bool) -> Self {
+        Self {
+            flag: Cell::new(flag),
+        }
+    }
+
     pub fn set(&mut self) {
         self.flag.set(true);
     }
@@ -19,7 +25,7 @@ impl Latch {
         flag
     }
 
-    pub fn peek(&mut self) -> bool {
+    pub fn peek(&self) -> bool {
         self.flag.get()
     }
 
@@ -31,9 +37,7 @@ impl Latch {
 
 impl Default for Latch {
     fn default() -> Self {
-        Self {
-            flag: Cell::new(false),
-        }
+        Self::new(false)
     }
 }
 

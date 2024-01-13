@@ -19,7 +19,6 @@ where
     F: Fragment,
 {
     fn render<R: Render>(&mut self, host: &mut Renderer<R>) {
-        let Renderer { widget, .. } = host;
-        self.draw |= widget.tick(self.delta);
+        self.draw |= host.tick(self.delta);
     }
 }

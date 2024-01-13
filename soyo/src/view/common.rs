@@ -1,16 +1,18 @@
-use super::Frame;
-use crate::gfx::Color;
+use crate::{
+    gfx::Color,
+    util::{Frame, Latch},
+};
 
-#[derive(Clone, Copy)]
-pub struct Attribute {
+pub struct Common {
     pub frame: Frame,
     pub fg: Color,
     pub bg: Color,
     pub fill: bool,
     pub layout_fn: fn(Frame) -> Frame,
+    pub redraw: Latch,
 }
 
-impl Default for Attribute {
+impl Default for Common {
     fn default() -> Self {
         Self {
             frame: Frame::screen(0, 0),
@@ -18,11 +20,12 @@ impl Default for Attribute {
             bg: Color::BLACK,
             fill: true,
             layout_fn: |f| f,
+            redraw: Latch::new(true),
         }
     }
 }
 
-impl Attribute {
+impl Common {
     pub fn from_size(w: i32, h: i32) -> Self {
         Self {
             frame: Frame::screen(w, h),
@@ -30,6 +33,11 @@ impl Attribute {
             bg: Color::BLACK,
             fill: true,
             layout_fn: |f| f,
+            redraw: Latch::new(true),
         }
+    }
+
+    pub fn set_redraw(&mut self) {
+        self.redraw.set()
     }
 }

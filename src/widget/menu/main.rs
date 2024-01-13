@@ -1,53 +1,61 @@
 use soyo::{
     gfx::Color,
     raito::Slot,
-    view::{Compose, Frame, Host, Renderer, Visitor},
-    widget::{ILabel, Label},
+    util::Frame,
+    view::{Compose, Host, Renderer, Visitor},
+    widget::Label,
 };
 
 #[derive(Default)]
 pub struct Menu {
     item: usize,
-    list: Vec<Renderer<Label>>,
+    items: Vec<String>,
+    labels: Vec<Renderer<Label>>,
 }
 
 impl Menu {
-    pub fn set_list<'a, T, S>(&mut self, iter: T)
+    pub fn set_list<'a, S>(&mut self, input: &[S])
     where
-        T: IntoIterator<Item = &'a S>,
-        S: AsRef<str> + 'a + ?Sized,
+        S: AsRef<str> + 'a,
     {
-        self.list = iter
-            .into_iter()
-            .map(|t| {
-                let mut label = Renderer::from_str(t);
-                label.attr.fg = Color::WHITE;
-                label.attr.bg = Color::BLACK;
-                label
-            })
-            .collect();
-        self.item = 0;
-        self.list[0].attr.bg = Color::BLUE;
+        self.items = input.iter().map(|s| s.as_ref().to_owned()).collect();
     }
 
     pub fn set_item(&mut self, item: usize) {
-        self.list[self.item].attr.bg = Color::BLACK;
         self.item = item;
-        self.list[self.item].attr.bg = Color::BLUE;
     }
 }
 
 impl Compose for Menu {
     type Frag = Slot;
 
-    fn layout(&mut self, frame: &mut Frame) {
-        for (i, label) in self.list.iter_mut().enumerate() {
-            label.attr.frame = frame.set_y(frame.y + i as i32).set_h(1);
+    fn compose(&mut self, frame: &mut Frame) {
+        let Self {
+            items,
+            labels,
+            item,
+        } = self;
+
+        if items.len() != labels.len() {
+            self.labels
+                .resize_with(items.len(), Renderer::<Label>::default);
+        }
+
+        for (i, (text, label)) in items.iter().zip(&mut self.labels).enumerate() {
+            label.set_frame(frame.set_y(frame.y + i as i32).set_h(1));
+            let mut label = label.handle();
+            label.set_fg(Color::WHITE);
+            if i == *item {
+                label.set_bg(Color::RED);
+            } else {
+                label.set_bg(Color::BLUE);
+            }
+            label.set_text(text.as_ref());
         }
     }
 
     fn propagate<V: Visitor<Self::Frag>>(&mut self, v: &mut V) {
-        for label in self.list.iter_mut() {
+        for label in self.labels.iter_mut() {
             label.accept_visitor(v);
         }
     }

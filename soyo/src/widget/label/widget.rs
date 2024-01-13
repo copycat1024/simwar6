@@ -1,7 +1,8 @@
+use super::handle::Handle;
 use crate::{
     raito::Slot,
     util::AlignX,
-    view::{Attribute, Render, Symbol},
+    view::{Common, Render, Renderer, Symbol, Widget},
 };
 
 pub struct Label {
@@ -10,10 +11,28 @@ pub struct Label {
     pub len: usize,
 }
 
+impl Label {
+    pub fn new<S>(text: &S) -> Renderer<Self>
+    where
+        S: AsRef<str> + ?Sized,
+    {
+        let text = text.as_ref().to_owned();
+        Renderer::new(Self {
+            len: text.len(),
+            text,
+            ..Label::default()
+        })
+    }
+}
+
+impl Widget for Label {
+    type Handle<'a> = Handle<'a>;
+}
+
 impl Render for Label {
     type Frag = Slot;
 
-    fn render(&self, attr: &Attribute) -> Vec<Slot> {
+    fn render(&self, attr: &Common) -> Vec<Slot> {
         let offset = self.align.offset(attr.frame.w, self.len as i32);
 
         self.text

@@ -2,7 +2,7 @@ use super::{Event, Model, View};
 use crate::widget::MenuCtrl;
 use soyo::{
     gfx::{self, Key},
-    mvc::{self, Flow},
+    mvc,
     raito::Slot,
 };
 
@@ -50,11 +50,8 @@ impl mvc::Control for Control {
         }
     }
 
-    fn cache(&mut self, model: &Self::Model, flow: &mut Flow) {
+    fn cache(&mut self, _model: &Self::Model) {
         self.menu.set_list(APP_LIST.iter());
-
-        flow.draw |= self.menu.hot();
-        flow.draw |= model.id.is_some();
     }
 
     fn update(&self, view: &mut Self::View) {

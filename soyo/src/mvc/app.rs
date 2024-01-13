@@ -1,4 +1,4 @@
-use super::{Control, Flow, Model, View};
+use super::{Control, Model, View};
 use crate::gfx::Backend;
 
 pub struct App<C: Control> {
@@ -24,18 +24,17 @@ impl<C: Control> App<C> {
             mut model,
             mut view,
         } = self;
-        let mut flow = Flow::default();
 
         // resize on init
         let (w, h) = backend.size();
-        view.resize(w, h, &mut flow);
+        view.resize(w, h);
 
         // main loop
         'main: loop {
             // handle native events
 
             while let Some(event) = backend.event() {
-                view.handle_event(event, &mut flow);
+                view.handle_event(event);
 
                 ctrl.handle(event, &view.node().widget);
 
@@ -47,18 +46,9 @@ impl<C: Control> App<C> {
                 }
             }
 
-            ctrl.cache(&model, &mut flow);
-
-            if flow.draw.get() {
-                // update view
-                ctrl.update(&mut view.node_mut().widget);
-
-                // compose view
-                view.compose();
-
-                // draw
-                view.draw(backend);
-            }
+            ctrl.cache(&model);
+            ctrl.update(&mut view.node_mut().widget);
+            view.draw(backend);
         }
     }
 }

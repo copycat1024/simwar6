@@ -1,10 +1,8 @@
-use super::{
-    visitor::{DrawVisitor, TickVisitor},
-    Flow,
-};
+use super::visitor::{DrawVisitor, RedrawVisitor, TickVisitor};
 use crate::{
     gfx::{Backend, Event},
-    view::{Compose, Composer, Frame, Host},
+    util::Frame,
+    view::{Compose, Composer, Host},
 };
 
 pub struct View<T>
@@ -26,41 +24,47 @@ where
         }
     }
 
-    pub fn handle_event(&mut self, event: Event, flow: &mut Flow) {
+    pub fn handle_event(&mut self, event: Event) {
         match event {
             Event::Resize { w, h } => {
-                self.resize(w, h, flow);
+                self.resize(w, h);
             }
             Event::Update { delta } => {
                 let delta = delta.as_millis() as u64;
-                self.tick(delta, flow);
+                self.tick(delta);
             }
             _ => {}
         }
     }
 
-    pub fn resize(&mut self, w: i32, h: i32, flow: &mut Flow) {
-        flow.draw.set();
+    pub fn resize(&mut self, w: i32, h: i32) {
         self.screen = Frame::screen(w, h);
     }
 
-    fn tick(&mut self, delta: u64, flow: &mut Flow) {
+    fn tick(&mut self, delta: u64) {
         let mut visitor = TickVisitor::new(delta);
         self.root.accept_visitor(&mut visitor);
-        flow.draw |= visitor.draw;
-    }
-
-    pub fn compose(&mut self) {
-        self.root.layout(self.screen);
     }
 
     pub fn draw<B>(&mut self, ctx: &mut B)
     where
         B: Backend<Frag = T::Frag>,
     {
-        let mut visitor = DrawVisitor::new(ctx);
+        self.root.compose(self.screen);
+
+        let mut visitor = RedrawVisitor::default();
         self.root.accept_visitor(&mut visitor);
-        ctx.draw();
+
+        if visitor.redraw {
+            println!("redraw");
+
+            // emit draw commands
+            let mut visitor = DrawVisitor::new(ctx);
+            self.root.accept_visitor(&mut visitor);
+
+            // execute draw commands
+            ctx.draw();
+        }
     }
 
     pub fn node(&self) -> &Composer<T> {

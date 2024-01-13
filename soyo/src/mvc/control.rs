@@ -1,4 +1,4 @@
-use super::{Flow, Model};
+use super::Model;
 use crate::{
     gfx::{self, Fragment},
     view::Compose,
@@ -18,6 +18,6 @@ pub trait Control: Sized {
         view: &Self::View,
     ) -> Option<<Self::Model as Model>::Event>;
 
-    fn cache(&mut self, model: &Self::Model, flow: &mut Flow);
+    fn cache(&mut self, model: &Self::Model);
     fn update(&self, view: &mut Self::View);
 }

@@ -1,5 +1,5 @@
-mod interface;
+mod handle;
 mod widget;
 
-pub use interface::ILabel;
+pub use handle::Handle;
 pub use widget::Label;

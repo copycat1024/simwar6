@@ -1,4 +1,4 @@
-use crate::{gfx::Color, raito::Slot, view::Attribute};
+use crate::{gfx::Color, raito::Slot, view::Common};
 
 pub struct Symbol {
     pub x: i32,
@@ -59,7 +59,7 @@ impl Symbol {
         }
     }
 
-    pub fn to_slot(&self, attr: &Attribute) -> Slot {
+    pub fn to_slot(&self, attr: &Common) -> Slot {
         let Self { x, y, z, c, bg, fg } = self;
         Slot {
             x: x + attr.frame.x,
