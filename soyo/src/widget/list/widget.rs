@@ -3,8 +3,7 @@ use crate::{
     gfx::Color,
     raito::Slot,
     util::Frame,
-    view::{Compose, Host, Renderer, Visitor, Widget},
-    widget::Label,
+    widget::{Compose, Host, Label, Renderer, Visitor, Widget},
 };
 
 #[derive(Default)]

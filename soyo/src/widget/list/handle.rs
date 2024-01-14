@@ -1,5 +1,5 @@
 use super::ListView;
-use crate::view::{Common, HandleOf};
+use crate::widget::{Common, HandleOf};
 
 pub struct Handle<'a> {
     widget: &'a mut ListView,

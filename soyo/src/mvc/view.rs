@@ -2,7 +2,7 @@ use super::visitor::{DrawVisitor, RedrawVisitor, TickVisitor};
 use crate::{
     gfx::{Backend, Event},
     util::Frame,
-    view::{Compose, Composer, Host, Widget},
+    widget::{Compose, Composer, Host, Widget},
 };
 
 pub struct View<T>

@@ -4,7 +4,7 @@ use soyo::{
     gfx::{self, Key},
     mvc,
     raito::Slot,
-    view::Widget,
+    widget::Widget,
 };
 
 #[derive(Default)]

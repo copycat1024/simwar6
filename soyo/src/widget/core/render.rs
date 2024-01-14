@@ -1,7 +1,7 @@
 use crate::{
     gfx::{Backend, Fragment},
     util::Frame,
-    view::{Common, Host, Visitor, Widget},
+    widget::{Common, Host, Visitor, Widget},
 };
 
 pub trait Render: Widget {

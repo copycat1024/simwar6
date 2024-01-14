@@ -1,7 +1,7 @@
 use super::Model;
 use crate::{
     gfx::{self, Fragment},
-    view::{Compose, Widget},
+    widget::{Compose, Widget},
 };
 
 pub trait Control: Sized {

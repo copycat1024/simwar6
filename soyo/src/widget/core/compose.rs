@@ -2,7 +2,7 @@ use super::Widget;
 use crate::{
     gfx::Fragment,
     util::Frame,
-    view::{Common, Host, Visitor},
+    widget::{Common, Host, Visitor},
 };
 
 pub trait Compose: Widget {

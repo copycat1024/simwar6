@@ -3,8 +3,7 @@ use soyo::{
     gfx::Color,
     raito::Slot,
     util::Frame,
-    view::{Compose, Composer, Host, Renderer, Visitor, Widget},
-    widget::{Label, ListView},
+    widget::{Compose, Composer, Host, Label, ListView, Renderer, Visitor, Widget},
 };
 
 pub const APP_LIST: [&str; 2] = ["Test app", "Unicode plane 0"];

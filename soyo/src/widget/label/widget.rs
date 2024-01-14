@@ -3,7 +3,7 @@ use crate::{
     gfx::Color,
     raito::Slot,
     util::AlignX,
-    view::{Common, Render, Renderer, Widget},
+    widget::{Common, Render, Renderer, Widget},
 };
 
 pub struct Label {

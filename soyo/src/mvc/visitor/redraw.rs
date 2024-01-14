@@ -1,6 +1,6 @@
 use crate::{
     gfx::Fragment,
-    view::{Render, Renderer, Visitor},
+    widget::{Render, Renderer, Visitor},
 };
 
 pub struct RedrawVisitor {

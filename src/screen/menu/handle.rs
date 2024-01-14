@@ -1,5 +1,5 @@
 use super::Menu;
-use soyo::view::{Common, HandleOf};
+use soyo::widget::{Common, HandleOf};
 
 pub struct Handle<'a> {
     widget: &'a mut Menu,

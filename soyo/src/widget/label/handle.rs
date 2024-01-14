@@ -2,7 +2,7 @@ use super::Label;
 use crate::{
     gfx::Color,
     util::AlignX,
-    view::{Common, HandleOf},
+    widget::{Common, HandleOf},
 };
 use std::fmt::Arguments;
 
