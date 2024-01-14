@@ -1,6 +1,6 @@
 use crate::{
     gfx::Fragment,
-    view::{Compose, Composer, Render, Renderer},
+    widget::{Compose, Composer, Render, Renderer},
 };
 
 pub trait Visitor<F: Fragment> {

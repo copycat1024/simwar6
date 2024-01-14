@@ -1,12 +1,15 @@
+use super::Widget;
 use crate::{
     gfx::Fragment,
-    view::{Attribute, Frame, Host, Visitor},
+    util::Frame,
+    widget::{Common, Host, Visitor},
 };
 
-pub trait Compose: 'static {
+pub trait Compose: Widget {
     type Frag: Fragment;
+
+    fn compose(&mut self, frame: &mut Frame);
     fn propagate<V: Visitor<Self::Frag>>(&mut self, v: &mut V);
-    fn layout(&mut self, _: &mut Frame) {}
 }
 
 pub struct Composer<T>
@@ -14,7 +17,7 @@ where
     T: Compose,
 {
     pub widget: T,
-    pub attr: Attribute,
+    pub common: Common,
 }
 
 impl<T> Composer<T>
@@ -24,14 +27,19 @@ where
     pub fn new(widget: T) -> Self {
         Self {
             widget,
-            attr: Attribute::default(),
+            common: Common::default(),
         }
     }
 
-    pub fn layout(&mut self, frame: Frame) -> Frame {
-        self.attr.frame = frame;
-        self.widget.layout(&mut self.attr.frame);
-        self.attr.frame
+    pub fn handle(&mut self) -> T::Handle<'_> {
+        let Self { widget, common } = self;
+        widget.handle(common)
+    }
+
+    pub fn compose(&mut self, frame: Frame) -> Frame {
+        self.common.frame = frame;
+        self.widget.compose(&mut self.common.frame);
+        self.common.frame
     }
 }
 

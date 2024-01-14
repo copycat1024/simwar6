@@ -1,5 +1,6 @@
 use std::cmp::min;
 
+#[derive(PartialEq)]
 pub enum AlignX {
     Left,
     Center,

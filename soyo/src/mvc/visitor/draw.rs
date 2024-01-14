@@ -1,6 +1,6 @@
 use crate::{
     gfx::Backend,
-    view::{Render, Renderer, Visitor},
+    widget::{Render, Renderer, Visitor},
 };
 
 pub struct DrawVisitor<'a, B>

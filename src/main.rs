@@ -1,7 +1,7 @@
 mod app;
 mod launcher;
+mod screen;
 mod util;
-mod widget;
 
 use std::panic::{set_hook, PanicInfo};
 
