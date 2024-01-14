@@ -1,5 +1,3 @@
-#![feature(coerce_unsized)]
-#![feature(unsize)]
 #![warn(clippy::all)]
 
 pub mod gfx;

@@ -33,7 +33,8 @@ impl<'a> Handle<'a> {
     }
 
     pub fn set_align(&mut self, align: AlignX) {
-        self.widget.align = align;
+        let Self { common, widget } = self;
+        common.cmp_and_set(&mut widget.align, align);
     }
 
     pub fn set_fg(&mut self, color: Color) {
@@ -44,9 +45,5 @@ impl<'a> Handle<'a> {
     pub fn set_bg(&mut self, color: Color) {
         let Self { common, widget } = self;
         common.cmp_and_set(&mut widget.bg, color);
-    }
-
-    pub fn text(&self) -> &str {
-        &self.widget.text
     }
 }
